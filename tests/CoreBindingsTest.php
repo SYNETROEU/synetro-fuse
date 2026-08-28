@@ -4,26 +4,26 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Tests;
 
-use Synetro\Fuse\Tests\TestCase;
-use Synetro\Fuse\Config\ConfigManager;
-use Synetro\Fuse\Secrets\SecretsManager;
-use Synetro\Fuse\Features\FeatureManager;
-use Synetro\Fuse\Cache\FuseCacheManager;
-use Synetro\Fuse\Audit\AuditManager;
-use Synetro\Fuse\Webhooks\WebhookManager;
-use Synetro\Fuse\Resources\ResourceManager;
-use Synetro\Fuse\Query\QueryManager;
 use Synetro\Fuse\Actions\ActionManager;
+use Synetro\Fuse\Api\ApiManager;
+use Synetro\Fuse\Audit\AuditManager;
+use Synetro\Fuse\Auth\AuthManager;
+use Synetro\Fuse\Cache\FuseCacheManager;
+use Synetro\Fuse\Config\ConfigManager;
+use Synetro\Fuse\Database\DatabaseManager;
+use Synetro\Fuse\Features\FeatureManager;
+use Synetro\Fuse\Files\FileManager;
 use Synetro\Fuse\Health\HealthManager;
-use Synetro\Fuse\Security\SecurityManager;
 use Synetro\Fuse\Logging\LogManager;
 use Synetro\Fuse\Metrics\MetricsManager;
 use Synetro\Fuse\Notifications\NotificationManager;
-use Synetro\Fuse\Files\FileManager;
-use Synetro\Fuse\Api\ApiManager;
-use Synetro\Fuse\Auth\AuthManager;
-use Synetro\Fuse\Database\DatabaseManager;
 use Synetro\Fuse\Pipeline\PipelineManager;
+use Synetro\Fuse\Query\QueryManager;
+use Synetro\Fuse\Resources\ResourceManager;
+use Synetro\Fuse\Secrets\SecretsManager;
+use Synetro\Fuse\Security\SecurityManager;
+use Synetro\Fuse\Support\Fuse;
+use Synetro\Fuse\Webhooks\WebhookManager;
 
 class CoreBindingsTest extends TestCase
 {
@@ -124,6 +124,6 @@ class CoreBindingsTest extends TestCase
 
     public function test_fuse_class_is_bound(): void
     {
-        $this->assertInstanceOf(\Synetro\Fuse\Support\Fuse::class, app(\Synetro\Fuse\Support\Fuse::class));
+        $this->assertInstanceOf(Fuse::class, app(Fuse::class));
     }
 }

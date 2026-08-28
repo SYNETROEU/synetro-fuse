@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Tests;
 
-use Synetro\Fuse\Tests\TestCase;
 use Synetro\Fuse\Config\ConfigManager;
-use Synetro\Fuse\Exceptions\ConfigException;
 
 class ConfigManagerTest extends TestCase
 {

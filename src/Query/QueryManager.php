@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Query;
 
+use Illuminate\Database\Eloquent\Builder;
+
 class QueryManager
 {
     protected array $filters = [];
@@ -18,7 +20,7 @@ class QueryManager
         $this->filters[$name] = $callback;
     }
 
-    public function apply(string $name, \Illuminate\Database\Eloquent\Builder $query): void
+    public function apply(string $name, Builder $query): void
     {
         if (isset($this->filters[$name])) {
             ($this->filters[$name])($query);

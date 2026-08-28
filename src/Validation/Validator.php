@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Validation;
 
+use Illuminate\Contracts\Support\MessageBag;
+
 class Validator
 {
     public function __construct(protected mixed $data, protected array $rules) {}
@@ -17,7 +19,7 @@ class Validator
 
     public function fails(): bool
     {
-        return !$this->passes();
+        return ! $this->passes();
     }
 
     public function validate(): void
@@ -27,7 +29,7 @@ class Validator
         $validator->validate();
     }
 
-    public function errors(): \Illuminate\Contracts\Support\MessageBag
+    public function errors(): MessageBag
     {
         $validator = \Illuminate\Support\Facades\Validator::make($this->data, $this->rules);
 

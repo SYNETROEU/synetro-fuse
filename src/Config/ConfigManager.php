@@ -7,9 +7,6 @@ namespace Synetro\Fuse\Config;
 use Illuminate\Cache\Repository;
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Database\Connection;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Synetro\Fuse\Exceptions\ConfigException;
 use Synetro\Fuse\Models\Config as ConfigModel;
 
 class ConfigManager
@@ -64,7 +61,7 @@ class ConfigManager
             return false;
         }
 
-        $content = file_get_contents(__DIR__ . '/../../config/fuse.php');
+        $content = file_get_contents(__DIR__.'/../../config/fuse.php');
         file_put_contents($target, $content);
 
         return true;

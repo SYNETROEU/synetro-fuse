@@ -12,7 +12,7 @@ class FuseMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!request_id()) {
+        if (! request_id()) {
             $request->headers->set('X-Fuse-Request-ID', (string) Str::ulid());
         }
 

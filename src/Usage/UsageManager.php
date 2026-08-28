@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Usage;
 
+use Illuminate\Contracts\Cache\Repository;
+
 class UsageManager
 {
     protected ?string $user = null;
+
     protected ?string $feature = null;
+
     protected ?string $quotaName = null;
+
     protected mixed $quotaOwner = null;
+
     protected ?int $limit = null;
+
     protected ?int $resetEvery = null;
 
-    public function __construct(protected \Illuminate\Contracts\Cache\Repository $cache) {}
+    public function __construct(protected Repository $cache) {}
 
     public function for(string $user, string $feature): self
     {
@@ -68,7 +75,7 @@ class UsageManager
 
     public function direct(string $name, mixed $owner, int $amount, ?int $resetEvery = null): bool
     {
-        $key = "fuse.quota.{$name}." . (is_object($owner) ? get_class($owner) : $owner);
+        $key = "fuse.quota.{$name}.".(is_object($owner) ? get_class($owner) : $owner);
 
         $used = $this->cache->get("fuse.usage.{$key}", 0);
 
@@ -85,11 +92,12 @@ class UsageManager
             $owner = is_object($this->quotaOwner) ? get_class($this->quotaOwner) : ($this->quotaOwner ?? 'global');
             $key = "fuse.quota.{$this->quotaName}.{$owner}";
         } else {
-            $key = ($this->user ?? 'global') . '.' . ($this->feature ?? 'default');
+            $key = ($this->user ?? 'global').'.'.($this->feature ?? 'default');
         }
 
         if ($resetEvery) {
             $period = now()->floor($resetEvery)->timestamp;
+
             return "{$key}.{$period}";
         }
 

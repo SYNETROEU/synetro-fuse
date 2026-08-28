@@ -18,7 +18,7 @@ class StorageCheck implements HealthCheckInterface
     {
         $storagePath = storage_path('app');
 
-        if (!is_writable($storagePath)) {
+        if (! is_writable($storagePath)) {
             return HealthResult::fail('storage', 'Storage not writable');
         }
 

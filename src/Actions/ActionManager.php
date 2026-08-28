@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Actions;
 
+use Illuminate\Contracts\Queue\Queue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Collection;
+use Illuminate\Events\Dispatcher;
 
 class ActionManager
 {
     public function __construct(
-        protected \Illuminate\Events\Dispatcher $events,
-        protected \Illuminate\Contracts\Queue\Queue $queue,
+        protected Dispatcher $events,
+        protected Queue $queue,
     ) {}
 
     public function run(string $action, mixed $payload): mixed
     {
-        $instance = new $action();
+        $instance = new $action;
 
         $this->events->dispatch(new Events\ActionRunning($action, $payload));
 

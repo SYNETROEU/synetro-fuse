@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Tests;
 
-use Synetro\Fuse\Tests\TestCase;
-use Synetro\Fuse\Support\FuseExtensionManager;
 use Synetro\Fuse\Health\HealthCheckInterface;
 use Synetro\Fuse\Health\HealthResult;
+use Synetro\Fuse\Support\Facades\Fuse;
+use Synetro\Fuse\Support\FuseExtensionManager;
 
 class ExtensionTest extends TestCase
 {
@@ -44,10 +44,11 @@ class ExtensionTest extends TestCase
     public function test_register_health_check(): void
     {
         $manager = app(FuseExtensionManager::class);
-        $check = new class implements HealthCheckInterface {
-            public function check(): \Synetro\Fuse\Health\HealthResult
+        $check = new class implements HealthCheckInterface
+        {
+            public function check(): HealthResult
             {
-                return \Synetro\Fuse\Health\HealthResult::pass('custom');
+                return HealthResult::pass('custom');
             }
         };
 
@@ -83,8 +84,8 @@ class ExtensionTest extends TestCase
 
     public function test_fuse_facade_can_extend(): void
     {
-        \Synetro\Fuse\Support\Facades\Fuse::extend('facade-test', fn () => 'works');
+        Fuse::extend('facade-test', fn () => 'works');
 
-        $this->assertTrue(\Synetro\Fuse\Support\Facades\Fuse::hasExtension('facade-test'));
+        $this->assertTrue(Fuse::hasExtension('facade-test'));
     }
 }

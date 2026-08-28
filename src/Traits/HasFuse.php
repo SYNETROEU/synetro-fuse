@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Traits;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Synetro\Fuse\Audit\Audit;
 use Synetro\Fuse\Files\AttachedFile;
-use Synetro\Fuse\Features\FeatureManager;
 use Synetro\Fuse\Query\QueryManager;
 
 trait HasFuse
@@ -20,17 +19,17 @@ trait HasFuse
 
     public function activity()
     {
-        return $this->morphMany(\Synetro\Fuse\Audit\Audit::class, 'actor');
+        return $this->morphMany(Audit::class, 'actor');
     }
 
     public function audits()
     {
-        return $this->morphMany(\Synetro\Fuse\Audit\Audit::class, 'actor');
+        return $this->morphMany(Audit::class, 'actor');
     }
 
     public function attachFile(string $name, mixed $file): AttachedFile
     {
-        $path = $this->getTable() . '/' . $this->getKey() . '/' . $name;
+        $path = $this->getTable().'/'.$this->getKey().'/'.$name;
         $disk = config('fuse.files.default_disk', 'public');
 
         Storage::disk($disk)->put($path, $file);
@@ -40,10 +39,10 @@ trait HasFuse
 
     public function file(string $name): ?AttachedFile
     {
-        $path = $this->getTable() . '/' . $this->getKey() . '/' . $name;
+        $path = $this->getTable().'/'.$this->getKey().'/'.$name;
         $disk = config('fuse.files.default_disk', 'public');
 
-        if (!Storage::disk($disk)->exists($path)) {
+        if (! Storage::disk($disk)->exists($path)) {
             return null;
         }
 
@@ -52,12 +51,12 @@ trait HasFuse
 
     public function fuse(): QueryManager
     {
-        return app(\Synetro\Fuse\Query\QueryManager::class)->for($this->getTable());
+        return app(QueryManager::class)->for($this->getTable());
     }
 
     public function cached(): self
     {
-        return $this->remember($this->getTable() . ':' . $this->getKey(), 3600);
+        return $this->remember($this->getTable().':'.$this->getKey(), 3600);
     }
 
     public function remember(string $key, int $seconds): self

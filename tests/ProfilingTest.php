@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Tests;
 
-use Synetro\Fuse\Tests\TestCase;
+use Synetro\Fuse\Support\Facades\Fuse;
 
 class ProfilingTest extends TestCase
 {
@@ -12,7 +12,7 @@ class ProfilingTest extends TestCase
     {
         config()->set('app.debug', true);
 
-        $result = \Synetro\Fuse\Support\Facades\Fuse::profile(function () {
+        $result = Fuse::profile(function () {
             return 'result';
         });
 
@@ -26,7 +26,7 @@ class ProfilingTest extends TestCase
     {
         config()->set('app.debug', false);
 
-        $result = \Synetro\Fuse\Support\Facades\Fuse::profile(function () {
+        $result = Fuse::profile(function () {
             return 'result';
         });
 

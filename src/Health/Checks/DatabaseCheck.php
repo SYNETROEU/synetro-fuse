@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Health\Checks;
 
-use Illuminate\Database\Connection;
 use Illuminate\Support\Facades\DB;
 use Synetro\Fuse\Health\HealthCheckInterface;
 use Synetro\Fuse\Health\HealthResult;

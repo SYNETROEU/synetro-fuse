@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Testing;
 
-use Illuminate\Foundation\Testing\TestCase;
-
 class Flow
 {
     protected $response;

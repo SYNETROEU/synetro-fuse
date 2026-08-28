@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Tests;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Synetro\Fuse\FuseServiceProvider;
 
@@ -32,6 +31,6 @@ abstract class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
     }
 }

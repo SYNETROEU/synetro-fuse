@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Api;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Collection;
 
 class ApiManager
 {

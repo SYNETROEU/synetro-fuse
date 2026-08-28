@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Tests;
 
-use Synetro\Fuse\Tests\TestCase;
+use Synetro\Fuse\Support\Facades\Fuse;
 
 class LocksTest extends TestCase
 {
     public function test_lock_runs_callback(): void
     {
-        $result = \Synetro\Fuse\Support\Facades\Fuse::lock('test-lock')->run(function () {
+        $result = Fuse::lock('test-lock')->run(function () {
             return 'locked-result';
         });
 
@@ -21,8 +21,9 @@ class LocksTest extends TestCase
     {
         $results = [];
 
-        \Synetro\Fuse\Support\Facades\Fuse::lock('concurrent-lock')->run(function () use (&$results) {
+        Fuse::lock('concurrent-lock')->run(function () use (&$results) {
             $results[] = 'first';
+
             return 'first';
         });
 

@@ -50,8 +50,9 @@ class FuseAuthCommand extends Command
         foreach ($controllers as $name => $stub) {
             $path = app_path("Http/Controllers/Auth/{$name}.php");
 
-            if (File::exists($path) && !$this->option('force')) {
+            if (File::exists($path) && ! $this->option('force')) {
                 $this->warn("Skipped {$name} (already exists)");
+
                 continue;
             }
 
@@ -64,7 +65,7 @@ class FuseAuthCommand extends Command
     {
         $routesPath = base_path('routes/auth.php');
 
-        if (!File::exists($routesPath) || $this->option('force')) {
+        if (! File::exists($routesPath) || $this->option('force')) {
             File::put($routesPath, $this->routesStub());
             $this->info('Created: routes/auth.php');
         } else {
@@ -76,7 +77,7 @@ class FuseAuthCommand extends Command
     {
         $middlewarePath = app_path('Http/Middleware/EnsureEmailIsVerified.php');
 
-        if (!File::exists($middlewarePath) || $this->option('force')) {
+        if (! File::exists($middlewarePath) || $this->option('force')) {
             File::put($middlewarePath, $this->middlewareStub('EnsureEmailIsVerified'));
             $this->info('Created: EnsureEmailIsVerified middleware');
         }

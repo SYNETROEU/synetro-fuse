@@ -151,6 +151,44 @@ $this->app->singleton(\Synetro\Fuse\Metrics\MetricsManager::class, function ($ap
 });
 ```
 
+### 7a. Custom Resource Definitions
+
+Create and register resource definitions directly for full control:
+
+```php
+use Synetro\Fuse\Resources\ResourceDefinition;
+use Synetro\Fuse\Resources\ResourceManager;
+
+$resource = new ResourceDefinition(
+    name: 'Product',
+    model: Product::class,
+    search: ['name', 'sku'],
+    filter: ['status', 'category_id'],
+    sort: ['name', 'created_at'],
+    include: ['category'],
+    fields: ['id', 'name', 'price'],
+    paginate: 25,
+    authorize: true,
+    policy: ProductPolicy::class,
+    middleware: ['auth:sanctum'],
+);
+
+app(ResourceManager::class)->register($resource);
+```
+
+### 7b. Custom Resource Route Registrar
+
+Replace the default route registrar to customize how resource routes are registered:
+
+```php
+$this->app->singleton(
+    \Synetro\Fuse\Resources\ResourceRouteRegistrar::class,
+    function ($app) {
+        return new \App\Custom\CustomResourceRouteRegistrar($app['router']);
+    }
+);
+```
+
 ### 8. Custom Artisan Commands
 
 Register additional commands that integrate with Fuse:

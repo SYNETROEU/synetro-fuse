@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Health;
 
-use Illuminate\Cache\CacheManager;
 use Illuminate\Cache\Repository;
 use Illuminate\Database\Connection;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -33,7 +32,7 @@ class HealthManager
 
     public function check(string $name): HealthResult
     {
-        if (!isset($this->checks[$name])) {
+        if (! isset($this->checks[$name])) {
             throw new \InvalidArgumentException("Health check [{$name}] not found.");
         }
 

@@ -6,15 +6,19 @@ namespace Synetro\Fuse\Support;
 
 use Illuminate\Contracts\Container\Container;
 use Synetro\Fuse\Health\HealthCheckInterface;
-use Synetro\Fuse\Discovery\DiscoveryManager;
 
 class FuseExtensionManager
 {
     protected array $extensions = [];
+
     protected array $macros = [];
+
     protected array $healthChecks = [];
+
     protected array $discoveryClasses = [];
+
     protected array $generatorStubs = [];
+
     protected array $eventSubscribers = [];
 
     public function __construct(protected Container $app) {}
@@ -59,7 +63,7 @@ class FuseExtensionManager
         $this->discoveryClasses[$type][] = $class;
     }
 
-    public function discoveryClasses(string $type = null): array
+    public function discoveryClasses(?string $type = null): array
     {
         if ($type) {
             return $this->discoveryClasses[$type] ?? [];

@@ -6,7 +6,6 @@ namespace Synetro\Fuse\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\File;
 
 class CleanupCommand extends Command
 {
@@ -20,8 +19,8 @@ class CleanupCommand extends Command
     {
         $types = $this->option('type') ?: ['sessions', 'tokens', 'audits', 'webhooks', 'jobs', 'temp', 'cache'];
 
-        if (!$this->option('force')) {
-            if (!$this->confirm('This will delete expired data. Continue?')) {
+        if (! $this->option('force')) {
+            if (! $this->confirm('This will delete expired data. Continue?')) {
                 return Command::SUCCESS;
             }
         }

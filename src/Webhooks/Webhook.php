@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Webhooks;
 
-use Illuminate\Http\Client\Response;
-
 class Webhook
 {
     public function __construct(

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Support;
 
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Support\Facades\Storage;
+use Synetro\Fuse\Config\ConfigManager;
 
 class FuseTenant extends Fuse
 {
@@ -18,6 +18,6 @@ class FuseTenant extends Fuse
 
     public function config(string $key): mixed
     {
-        return app(\Synetro\Fuse\Config\ConfigManager::class)->forTenant($this->tenant)->get($key);
+        return app(ConfigManager::class)->forTenant($this->tenant)->get($key);
     }
 }

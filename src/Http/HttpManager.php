@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Http;
 
 use Illuminate\Http\Client\Factory as HttpClient;
-use Illuminate\Http\Client\Response;
 
 class HttpManager
 {

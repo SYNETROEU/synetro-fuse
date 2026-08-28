@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Logging;
 
 use Illuminate\Log\LogManager as IlluminateLogManager;
-use Illuminate\Support\Collection;
 
 class LogManager
 {

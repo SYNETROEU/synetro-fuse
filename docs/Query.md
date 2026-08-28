@@ -42,7 +42,11 @@ return $query->paginate(25);
 ```php
 use Synetro\Fuse\Support\Facades\Fuse;
 
-$fuseQuery = Fuse::query(Product::class)
+$fuseQuery = Fuse::resource(Product::class)
+    ->search(['name', 'sku'])
+    ->buildQuery();
+
+$products = $fuseQuery
     ->search('keyboard')
     ->filter(['status' => 'active'])
     ->sort('-created_at')
@@ -53,20 +57,25 @@ $fuseQuery = Fuse::query(Product::class)
 
 ## Installation / Setup
 
-Register searchable, filterable, sortable, includable, and field allow-lists via `Fuse::resource()` or instantiate `FuseQuery` directly.
+Register searchable, filterable, sortable, includable, and field allow-lists via `Fuse::resource()` or instantiate `ResourceQuery` directly.
 
 ## Usage
 
 ```php
-use Synetro\Fuse\Query\FuseQuery;
+use Synetro\Fuse\Resources\ResourceDefinition;
+use Synetro\Fuse\Resources\ResourceQuery;
 
-$query = new FuseQuery(Product::class, [
-    'search' => ['name', 'sku'],
-    'filter' => ['status', 'category_id'],
-    'sort'   => ['name', 'created_at'],
-    'include' => ['category'],
-    'fields' => ['id', 'name', 'price', 'status'],
-]);
+$definition = new ResourceDefinition(
+    name: 'Product',
+    model: Product::class,
+    search: ['name', 'sku'],
+    filter: ['status', 'category_id'],
+    sort:   ['name', 'created_at'],
+    include: ['category'],
+    fields: ['id', 'name', 'price', 'status'],
+);
+
+$query = new ResourceQuery($definition);
 
 $products = $query
     ->search('keyboard')
@@ -83,11 +92,12 @@ $products = $query
 // Apply all params from a request at once
 $query->apply($request->all());
 
-// Use with models via HasFuse trait
-$products = Product::fuse()
-    ->search('keyboard')
-    ->filter(['status' => 'active'])
-    ->get();
+// Use with resources
+$products = Fuse::resource(Product::class)
+    ->search(['name', 'sku'])
+    ->buildQuery()
+    ->apply($request->all())
+    ->paginate();
 ```
 
 ## Security Considerations

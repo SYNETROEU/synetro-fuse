@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Security;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class SecurityManager
@@ -38,7 +37,7 @@ class SecurityManager
             return str_repeat('*', strlen($value));
         }
 
-        return substr($value, 0, $visibleChars) . str_repeat('*', strlen($value) - ($visibleChars * 2)) . substr($value, -$visibleChars);
+        return substr($value, 0, $visibleChars).str_repeat('*', strlen($value) - ($visibleChars * 2)).substr($value, -$visibleChars);
     }
 
     public function token(int $length = 32): string

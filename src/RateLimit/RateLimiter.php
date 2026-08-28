@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\RateLimit;
 
+use Illuminate\Contracts\Cache\Repository;
+
 class RateLimiter
 {
     protected ?string $name = null;
+
     protected int $maxAttempts = 5;
+
     protected int $decaySeconds = 60;
 
-    public function __construct(protected \Illuminate\Contracts\Cache\Repository $cache) {}
+    public function __construct(protected Repository $cache) {}
 
     public function for(string $name): self
     {
@@ -37,7 +41,7 @@ class RateLimiter
 
     public function by(string $identifier): self
     {
-        $this->name = ($this->name ?? 'default') . '.' . $identifier;
+        $this->name = ($this->name ?? 'default').'.'.$identifier;
 
         return $this;
     }
@@ -48,7 +52,7 @@ class RateLimiter
 
         $hits = $this->cache->add("fuse.rate_limit.{$key}", 0, $this->decaySeconds);
 
-        if (!$hits) {
+        if (! $hits) {
             $current = $this->cache->get("fuse.rate_limit.{$key}", 0);
 
             if ($current >= $this->maxAttempts) {
@@ -56,10 +60,12 @@ class RateLimiter
             }
 
             $this->cache->increment("fuse.rate_limit.{$key}");
+
             return true;
         }
 
         $this->cache->increment("fuse.rate_limit.{$key}");
+
         return true;
     }
 }

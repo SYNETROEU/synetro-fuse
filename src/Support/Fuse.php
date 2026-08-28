@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Support;
 
 use Illuminate\Contracts\Container\Container;
-use Synetro\Fuse\Actions\ActionManager;
+use Illuminate\Database\Query\Builder;
 use Synetro\Fuse\Api\ApiManager;
+use Synetro\Fuse\Audit\AuditManager;
 use Synetro\Fuse\Auth\AuthManager;
 use Synetro\Fuse\Bulk\BulkManager;
 use Synetro\Fuse\Cache\FuseCacheManager;
 use Synetro\Fuse\Config\ConfigManager;
-use Synetro\Fuse\Console\ConsoleManager;
 use Synetro\Fuse\Database\DatabaseManager;
 use Synetro\Fuse\Discovery\DiscoveryManager;
-use Synetro\Fuse\Exceptions\ExceptionsManager;
+use Synetro\Fuse\Features\Feature;
 use Synetro\Fuse\Features\FeatureManager;
 use Synetro\Fuse\Files\FileManager;
 use Synetro\Fuse\Health\HealthManager;
@@ -30,14 +30,13 @@ use Synetro\Fuse\Pipeline\PipelineManager;
 use Synetro\Fuse\Profiling\ProfilerManager;
 use Synetro\Fuse\Query\QueryManager;
 use Synetro\Fuse\RateLimit\RateLimiter;
+use Synetro\Fuse\Resources\ResourceBuilder;
 use Synetro\Fuse\Resources\ResourceManager;
+use Synetro\Fuse\Secrets\SecretsManager;
 use Synetro\Fuse\Security\SecurityManager;
 use Synetro\Fuse\Usage\UsageManager;
 use Synetro\Fuse\Validation\Validator;
 use Synetro\Fuse\Webhooks\WebhookManager;
-use Synetro\Fuse\Secrets\SecretsManager;
-use Synetro\Fuse\Audit\AuditManager;
-use Synetro\Fuse\Support\FuseExtensionManager;
 
 class Fuse
 {
@@ -46,7 +45,7 @@ class Fuse
         protected FuseExtensionManager $extensions,
     ) {}
 
-    public function resource(string $model): ResourceManager
+    public function resource(string $model): ResourceBuilder
     {
         return app(ResourceManager::class)->for($model);
     }
@@ -61,7 +60,7 @@ class Fuse
         return app(SecretsManager::class)->for($key);
     }
 
-    public function feature(string $key): \Synetro\Fuse\Features\Feature
+    public function feature(string $key): Feature
     {
         return app(FeatureManager::class)->for($key);
     }
@@ -161,7 +160,7 @@ class Fuse
         return new Validator($data, $rules);
     }
 
-    public function bulk(\Illuminate\Database\Query\Builder $query): BulkManager
+    public function bulk(Builder $query): BulkManager
     {
         return new BulkManager($query);
     }
@@ -216,29 +215,29 @@ class Fuse
         return app(DiscoveryManager::class);
     }
 
-    public function ai(): \Synetro\Fuse\Support\FuseAi
+    public function ai(): FuseAi
     {
-        return app(\Synetro\Fuse\Support\FuseAi::class);
+        return app(FuseAi::class);
     }
 
-    public function realtime(): \Synetro\Fuse\Support\FuseRealtime
+    public function realtime(): FuseRealtime
     {
-        return app(\Synetro\Fuse\Support\FuseRealtime::class);
+        return app(FuseRealtime::class);
     }
 
-    public function broadcast(): \Synetro\Fuse\Support\FuseBroadcast
+    public function broadcast(): FuseBroadcast
     {
-        return app(\Synetro\Fuse\Support\FuseBroadcast::class);
+        return app(FuseBroadcast::class);
     }
 
-    public function payment(): \Synetro\Fuse\Support\FusePayment
+    public function payment(): FusePayment
     {
-        return app(\Synetro\Fuse\Support\FusePayment::class);
+        return app(FusePayment::class);
     }
 
-    public function subscription(): \Synetro\Fuse\Support\FuseSubscription
+    public function subscription(): FuseSubscription
     {
-        return app(\Synetro\Fuse\Support\FuseSubscription::class);
+        return app(FuseSubscription::class);
     }
 
     public function for(mixed $tenant): Fuse

@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Tests;
 
-use Synetro\Fuse\Tests\TestCase;
-use Synetro\Fuse\Features\FeatureManager;
 use Synetro\Fuse\Features\Feature;
+use Synetro\Fuse\Features\FeatureManager;
 
 class FeatureManagerTest extends TestCase
 {

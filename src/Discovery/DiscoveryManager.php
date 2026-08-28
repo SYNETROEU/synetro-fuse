@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Discovery;
 
+use Illuminate\Support\Facades\Cache;
+
 class DiscoveryManager
 {
     protected array $discovered = [];
+
     protected bool $enabled = true;
+
     protected array $customClasses = [];
 
     public function discover(string $type, string $namespace): array
     {
-        if (!$this->enabled) {
+        if (! $this->enabled) {
             return [];
         }
 
@@ -22,7 +26,7 @@ class DiscoveryManager
             return $this->discovered[$type];
         }
 
-        $cached = \Illuminate\Support\Facades\Cache::get($cacheKey);
+        $cached = Cache::get($cacheKey);
 
         if ($cached !== null) {
             return $this->discovered[$type] = $cached;
@@ -30,11 +34,11 @@ class DiscoveryManager
 
         $results = $this->scanNamespace($namespace);
 
-        if (!empty($this->customClasses[$type])) {
+        if (! empty($this->customClasses[$type])) {
             $results = array_merge($results, $this->customClasses[$type]);
         }
 
-        \Illuminate\Support\Facades\Cache::put($cacheKey, $results, 3600);
+        Cache::put($cacheKey, $results, 3600);
 
         return $this->discovered[$type] = $results;
     }
@@ -72,15 +76,15 @@ class DiscoveryManager
     {
         $path = app_path(str_replace('App\\', '', $namespace));
 
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             return [];
         }
 
-        $files = glob($path . '/*.php');
+        $files = glob($path.'/*.php');
         $classes = [];
 
         foreach ($files as $file) {
-            $class = $namespace . '\\' . pathinfo($file, PATHINFO_FILENAME);
+            $class = $namespace.'\\'.pathinfo($file, PATHINFO_FILENAME);
             if (class_exists($class)) {
                 $classes[] = $class;
             }

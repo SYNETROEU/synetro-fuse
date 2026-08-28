@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Tests;
 
-use Synetro\Fuse\Tests\TestCase;
+use Synetro\Fuse\Support\Facades\Fuse;
 
 class IdempotencyTest extends TestCase
 {
@@ -12,7 +12,7 @@ class IdempotencyTest extends TestCase
     {
         $calls = 0;
 
-        $result = \Synetro\Fuse\Support\Facades\Fuse::idempotent('test-key')->run(function () use (&$calls) {
+        $result = Fuse::idempotent('test-key')->run(function () use (&$calls) {
             $calls++;
 
             return 'result';
@@ -21,7 +21,7 @@ class IdempotencyTest extends TestCase
         $this->assertSame('result', $result);
         $this->assertSame(1, $calls);
 
-        $cached = \Synetro\Fuse\Support\Facades\Fuse::idempotent('test-key')->run(function () use (&$calls) {
+        $cached = Fuse::idempotent('test-key')->run(function () use (&$calls) {
             $calls++;
 
             return 'cached-result';

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Auth;
 
-use Illuminate\Contracts\Auth\Authenticatable;
-
 class AuthManager
 {
     public function authorize(string $ability, mixed $arguments = []): mixed

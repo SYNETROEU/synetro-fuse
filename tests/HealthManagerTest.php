@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Tests;
 
-use Synetro\Fuse\Tests\TestCase;
-use Synetro\Fuse\Health\HealthResult;
-use Synetro\Fuse\Health\HealthManager;
 use Synetro\Fuse\Health\Checks\DatabaseCheck;
+use Synetro\Fuse\Health\HealthManager;
+use Synetro\Fuse\Health\HealthResult;
 
 class HealthManagerTest extends TestCase
 {
@@ -20,7 +19,7 @@ class HealthManagerTest extends TestCase
 
     public function test_database_check_passes(): void
     {
-        $check = new DatabaseCheck();
+        $check = new DatabaseCheck;
         $result = $check->check();
 
         $this->assertInstanceOf(HealthResult::class, $result);

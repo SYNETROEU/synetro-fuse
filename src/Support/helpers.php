@@ -2,151 +2,160 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Facade;
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Queue;
+use Synetro\Fuse\Actions\ActionResponse;
+use Synetro\Fuse\Api\ResponseFactory;
+use Synetro\Fuse\Locks\LockManager;
+use Synetro\Fuse\Metrics\Metric;
+use Synetro\Fuse\Notifications\NotificationManager;
+use Synetro\Fuse\RateLimit\RateLimiter;
+use Synetro\Fuse\Support\Facades\Fuse;
+use Synetro\Fuse\Validation\Validator;
 
-if (!function_exists('flow')) {
-    function flow(string $action, mixed ...$args): \Synetro\Fuse\Actions\ActionResponse
+if (! function_exists('flow')) {
+    function flow(string $action, mixed ...$args): ActionResponse
     {
-        return \Synetro\Fuse\Support\Facades\Fuse::pipeline([$action])->run(...$args);
+        return Fuse::pipeline([$action])->run(...$args);
     }
 }
 
-if (!function_exists('api')) {
-    function api(mixed $data = null, int $status = 200): \Synetro\Fuse\Api\ResponseFactory
+if (! function_exists('api')) {
+    function api(mixed $data = null, int $status = 200): ResponseFactory
     {
-        return \Synetro\Fuse\Support\Facades\Fuse::api()->make($data, $status);
+        return Fuse::api()->make($data, $status);
     }
 }
 
-if (!function_exists('authorize')) {
+if (! function_exists('authorize')) {
     function authorize(string $ability, mixed $arguments = []): mixed
     {
-        return \Synetro\Fuse\Support\Facades\Fuse::auth()->authorize($ability, $arguments);
+        return Fuse::auth()->authorize($ability, $arguments);
     }
 }
 
-if (!function_exists('can')) {
+if (! function_exists('can')) {
     function can(string $ability, mixed $arguments = []): bool
     {
-        return \Synetro\Fuse\Support\Facades\Fuse::auth()->can($ability, $arguments);
+        return Fuse::auth()->can($ability, $arguments);
     }
 }
 
-if (!function_exists('cannot')) {
+if (! function_exists('cannot')) {
     function cannot(string $ability, mixed $arguments = []): bool
     {
-        return !can($ability, $arguments);
+        return ! can($ability, $arguments);
     }
 }
 
-if (!function_exists('request_id')) {
+if (! function_exists('request_id')) {
     function request_id(): ?string
     {
         return request()->header('X-Request-ID') ?? request()->header('X-Fuse-Request-ID');
     }
 }
 
-if (!function_exists('background')) {
+if (! function_exists('background')) {
     function background(callable $callback, array $options = []): void
     {
-        \Illuminate\Support\Facades\Queue::push($callback, $options);
+        Queue::push($callback, $options);
     }
 }
 
-if (!function_exists('later')) {
+if (! function_exists('later')) {
     function later(int $seconds, callable $callback, array $options = []): void
     {
-        \Illuminate\Support\Facades\Queue::later($seconds, $callback, $options);
+        Queue::later($seconds, $callback, $options);
     }
 }
 
-if (!function_exists('notify')) {
-    function notify(mixed $notifiable, mixed $notification): \Synetro\Fuse\Notifications\NotificationManager
+if (! function_exists('notify')) {
+    function notify(mixed $notifiable, mixed $notification): NotificationManager
     {
-        return \Synetro\Fuse\Support\Facades\Fuse::notify()->send($notifiable, $notification);
+        return Fuse::notify()->send($notifiable, $notification);
     }
 }
 
-if (!function_exists('today')) {
-    function today(): \Carbon\CarbonImmutable
+if (! function_exists('today')) {
+    function today(): CarbonImmutable
     {
-        return \Carbon\CarbonImmutable::today();
+        return CarbonImmutable::today();
     }
 }
 
-if (!function_exists('tomorrow')) {
-    function tomorrow(): \Carbon\CarbonImmutable
+if (! function_exists('tomorrow')) {
+    function tomorrow(): CarbonImmutable
     {
-        return \Carbon\CarbonImmutable::tomorrow();
+        return CarbonImmutable::tomorrow();
     }
 }
 
-if (!function_exists('yesterday')) {
-    function yesterday(): \Carbon\CarbonImmutable
+if (! function_exists('yesterday')) {
+    function yesterday(): CarbonImmutable
     {
-        return \Carbon\CarbonImmutable::yesterday();
+        return CarbonImmutable::yesterday();
     }
 }
 
-if (!function_exists('daysAgo')) {
-    function daysAgo(int $days): \Carbon\CarbonImmutable
+if (! function_exists('daysAgo')) {
+    function daysAgo(int $days): CarbonImmutable
     {
-        return \Carbon\CarbonImmutable::now()->subDays($days);
+        return CarbonImmutable::now()->subDays($days);
     }
 }
 
-if (!function_exists('daysFromNow')) {
-    function daysFromNow(int $days): \Carbon\CarbonImmutable
+if (! function_exists('daysFromNow')) {
+    function daysFromNow(int $days): CarbonImmutable
     {
-        return \Carbon\CarbonImmutable::now()->addDays($days);
+        return CarbonImmutable::now()->addDays($days);
     }
 }
 
-if (!function_exists('metric')) {
-    function metric(string $name): \Synetro\Fuse\Metrics\Metric
+if (! function_exists('metric')) {
+    function metric(string $name): Metric
     {
-        return \Synetro\Fuse\Support\Facades\Fuse::metrics()->metric($name);
+        return Fuse::metrics()->metric($name);
     }
 }
 
-if (!function_exists('log_info')) {
+if (! function_exists('log_info')) {
     function log_info(string $message, array $context = []): void
     {
-        \Synetro\Fuse\Support\Facades\Fuse::log()->info($message, $context);
+        Fuse::log()->info($message, $context);
     }
 }
 
-if (!function_exists('log_warning')) {
+if (! function_exists('log_warning')) {
     function log_warning(string $message, array $context = []): void
     {
-        \Synetro\Fuse\Support\Facades\Fuse::log()->warning($message, $context);
+        Fuse::log()->warning($message, $context);
     }
 }
 
-if (!function_exists('log_error')) {
+if (! function_exists('log_error')) {
     function log_error(string $message, array $context = []): void
     {
-        \Synetro\Fuse\Support\Facades\Fuse::log()->error($message, $context);
+        Fuse::log()->error($message, $context);
     }
 }
 
-if (!function_exists('validate')) {
-    function validate(mixed $data, array $rules): \Synetro\Fuse\Validation\Validator
+if (! function_exists('validate')) {
+    function validate(mixed $data, array $rules): Validator
     {
-        return \Synetro\Fuse\Support\Facades\Fuse::validate($data, $rules);
+        return Fuse::validate($data, $rules);
     }
 }
 
-if (!function_exists('lock')) {
-    function lock(string $name): \Synetro\Fuse\Locks\LockManager
+if (! function_exists('lock')) {
+    function lock(string $name): LockManager
     {
-        return \Synetro\Fuse\Support\Facades\Fuse::lock($name);
+        return Fuse::lock($name);
     }
 }
 
-if (!function_exists('limit')) {
-    function limit(string $name): \Synetro\Fuse\RateLimit\RateLimiter
+if (! function_exists('limit')) {
+    function limit(string $name): RateLimiter
     {
-        return \Synetro\Fuse\Support\Facades\Fuse::limit($name);
+        return Fuse::limit($name);
     }
 }

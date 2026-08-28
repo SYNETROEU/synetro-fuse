@@ -6,11 +6,11 @@ namespace Synetro\Fuse\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 
 class ModelsCommand extends Command
 {
     protected $signature = 'fuse:models';
+
     protected $description = 'List application models';
 
     public function handle(): int
@@ -20,8 +20,9 @@ class ModelsCommand extends Command
 
         $modelPath = app_path('Models');
 
-        if (!File::exists($modelPath)) {
+        if (! File::exists($modelPath)) {
             $this->warn('No Models directory found.');
+
             return Command::SUCCESS;
         }
 
@@ -29,7 +30,7 @@ class ModelsCommand extends Command
 
         foreach ($files as $file) {
             $className = $file->getBasename('.php');
-            $this->line('  - ' . $className);
+            $this->line('  - '.$className);
         }
 
         return Command::SUCCESS;

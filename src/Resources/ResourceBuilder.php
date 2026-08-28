@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Resources;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class ResourceBuilder
 {
@@ -18,8 +16,10 @@ class ResourceBuilder
         'fields' => [],
         'paginate' => 15,
         'authorize' => false,
-        'validate' => [],
         'policy' => null,
+        'middleware' => ['api'],
+        'uri' => null,
+        'controller' => null,
     ];
 
     public function __construct(
@@ -83,13 +83,57 @@ class ResourceBuilder
         return $this;
     }
 
-    public function register(): void
+    public function middleware(array $middleware): self
     {
-        $this->manager->register($this->model, $this->options);
+        $this->options['middleware'] = $middleware;
+
+        return $this;
     }
 
-    public function buildQuery(): FuseQuery
+    public function uri(string $uri): self
     {
-        return new FuseQuery($this->model, $this->options);
+        $this->options['uri'] = $uri;
+
+        return $this;
+    }
+
+    public function controller(string $controller): self
+    {
+        $this->options['controller'] = $controller;
+
+        return $this;
+    }
+
+    public function register(): void
+    {
+        $resource = $this->build();
+
+        $this->manager->register($resource);
+    }
+
+    public function buildQuery(): ResourceQuery
+    {
+        return new ResourceQuery($this->build());
+    }
+
+    public function build(): ResourceDefinition
+    {
+        $name = class_basename($this->model);
+
+        return new ResourceDefinition(
+            name: $name,
+            model: $this->model,
+            search: $this->options['search'],
+            filter: $this->options['filter'],
+            sort: $this->options['sort'],
+            include: $this->options['include'],
+            fields: $this->options['fields'],
+            paginate: $this->options['paginate'],
+            authorize: $this->options['authorize'],
+            policy: $this->options['policy'],
+            middleware: $this->options['middleware'],
+            uri: $this->options['uri'],
+            controller: $this->options['controller'],
+        );
     }
 }

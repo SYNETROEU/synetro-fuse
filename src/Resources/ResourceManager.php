@@ -4,53 +4,54 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Resources;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
-use Illuminate\Routing\Router;
-use Illuminate\Auth\Access\AuthorizationException;
-use Synetro\Fuse\Query\FuseQuery;
-use Synetro\Fuse\Exceptions\ResourceException;
-
 class ResourceManager
 {
-    protected array $registered = [];
+    protected array $definitions = [];
 
-    public function __construct(protected Router $router) {}
+    protected array $definitionsByUri = [];
+
+    public function __construct(
+        protected ResourceRouteRegistrar $routes,
+    ) {}
 
     public function for(string $model): ResourceBuilder
     {
         return new ResourceBuilder($model, $this);
     }
 
-    public function register(string $name, array $config): void
+    public function register(ResourceDefinition $resource): void
     {
-        $this->registered[$name] = $config;
+        $name = $resource->name();
+        $uri = $resource->uri();
+
+        if (isset($this->definitions[$name])) {
+            throw new \InvalidArgumentException("Resource [{$name}] is already registered.");
+        }
+
+        if (isset($this->definitionsByUri[$uri])) {
+            throw new \InvalidArgumentException("Resource URI [{$uri}] is already registered.");
+        }
+
+        $this->definitions[$name] = $resource;
+        $this->definitionsByUri[$uri] = $resource;
 
         if (config('fuse.routes.auto_register', true)) {
-            $this->registerRoutes($name, $config);
+            $this->routes->register($resource);
         }
     }
 
     public function all(): array
     {
-        return array_keys($this->registered);
+        return $this->definitions;
     }
 
-    protected function registerRoutes(string $name, array $config): void
+    public function get(string $name): ?ResourceDefinition
     {
-        $uri = strtolower($name) . 's';
-        $controller = $config['controller'] ?? "{$name}Controller";
+        return $this->definitions[$name] ?? null;
+    }
 
-        $this->router->middleware(config('fuse.routes.middleware', ['web', 'api']))
-            ->prefix(config('fuse.routes.prefix', '') . '/' . $uri)
-            ->group(function ($router) use ($name, $controller, $config) {
-                $router->get('/', [$controller, 'index']);
-                $router->post('/', [$controller, 'store']);
-                $router->get('/{id}', [$controller, 'show']);
-                $router->put('/{id}', [$controller, 'update']);
-                $router->patch('/{id}', [$controller, 'update']);
-                $router->delete('/{id}', [$controller, 'destroy']);
-            });
+    public function getByUri(string $uri): ?ResourceDefinition
+    {
+        return $this->definitionsByUri[$uri] ?? null;
     }
 }

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Traits;
 
 use Illuminate\Database\Eloquent\Model;
-use Synetro\Fuse\Audit\AuditManager;
 use Synetro\Fuse\Audit\Audit;
+use Synetro\Fuse\Audit\AuditManager;
 
 trait Auditable
 {

@@ -29,7 +29,7 @@ class DatabaseManager
     {
         $result = $this->db->selectOne('SELECT SUM(data_length + index_length) as size FROM information_schema.tables WHERE table_schema = ?', [$this->db->getDatabaseName()]);
 
-        return number_format($result->size / 1024 / 1024, 2) . ' MB';
+        return number_format($result->size / 1024 / 1024, 2).' MB';
     }
 
     public function tables(): Collection

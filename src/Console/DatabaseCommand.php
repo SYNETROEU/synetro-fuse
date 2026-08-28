@@ -41,7 +41,7 @@ class DatabaseCommand extends Command
         $size = DB::connection($connection)
             ->selectOne('SELECT SUM(data_length + index_length) as size FROM information_schema.tables WHERE table_schema = DATABASE()');
 
-        $this->info('Database Size: ' . number_format($size->size / 1024 / 1024, 2) . ' MB');
+        $this->info('Database Size: '.number_format($size->size / 1024 / 1024, 2).' MB');
     }
 
     protected function showTables(string $connection): void
@@ -51,7 +51,7 @@ class DatabaseCommand extends Command
 
         $this->info('Tables:');
         foreach ($tables as $table) {
-            $this->line('  - ' . array_values((array) $table)[0]);
+            $this->line('  - '.array_values((array) $table)[0]);
         }
     }
 

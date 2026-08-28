@@ -4,16 +4,21 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Profiling;
 
+use Illuminate\Support\Facades\DB;
+
 class ProfilerManager
 {
     protected ?array $queries = null;
+
     protected ?float $startTime = null;
+
     protected ?float $endTime = null;
+
     protected ?int $memoryStart = null;
 
     public function start(): void
     {
-        if (!config('app.debug')) {
+        if (! config('app.debug')) {
             return;
         }
 
@@ -21,7 +26,7 @@ class ProfilerManager
         $this->memoryStart = memory_get_usage(true);
         $this->queries = [];
 
-        \Illuminate\Support\Facades\DB::listen(function ($query) {
+        DB::listen(function ($query) {
             if ($this->queries !== null) {
                 $this->queries[] = [
                     'sql' => $query->sql,
@@ -33,7 +38,7 @@ class ProfilerManager
 
     public function stop(): array
     {
-        if (!config('app.debug')) {
+        if (! config('app.debug')) {
             return [];
         }
 

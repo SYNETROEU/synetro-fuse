@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Secrets;
 
+use Illuminate\Cache\Repository;
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Contracts\Encryption\Encrypter;
-use Illuminate\Cache\Repository;
-use Illuminate\Database\Connection;
-use Illuminate\Support\Str;
-use Synetro\Fuse\Exceptions\SecretException;
 
 class SecretsManager
 {
@@ -69,14 +66,14 @@ class SecretsManager
             return str_repeat('*', strlen($value));
         }
 
-        return substr($value, 0, 4) . str_repeat('*', strlen($value) - 8) . substr($value, -4);
+        return substr($value, 0, 4).str_repeat('*', strlen($value) - 8).substr($value, -4);
     }
 
     protected function resolveFromDatabase(string $key): ?string
     {
         $path = $this->secretPath($key);
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             return null;
         }
 
@@ -89,7 +86,7 @@ class SecretsManager
     {
         $path = $this->secretPath($key);
 
-        if (!is_dir(dirname($path))) {
+        if (! is_dir(dirname($path))) {
             mkdir(dirname($path), 0700, true);
         }
 
@@ -100,6 +97,6 @@ class SecretsManager
     {
         $hash = hash('sha256', $key);
 
-        return storage_path('app/fuse/secrets/' . $hash);
+        return storage_path('app/fuse/secrets/'.$hash);
     }
 }

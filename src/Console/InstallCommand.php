@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Synetro\Fuse\Config\ConfigManager;
-use Synetro\Fuse\Support\Facades\Fuse;
 
 class InstallCommand extends Command
 {
@@ -32,15 +29,15 @@ class InstallCommand extends Command
             $this->publishConfig($config);
         }
 
-        if (!$this->option('no-migrations')) {
+        if (! $this->option('no-migrations')) {
             $this->publishMigrations();
         }
 
-        if (!$this->option('no-routes')) {
+        if (! $this->option('no-routes')) {
             $this->publishRoutes();
         }
 
-        if (!$this->option('no-middleware')) {
+        if (! $this->option('no-middleware')) {
             $this->publishMiddleware();
         }
 
@@ -76,13 +73,13 @@ class InstallCommand extends Command
         $published = 0;
 
         foreach ($migrations as $migration) {
-            $target = database_path('migrations/' . $migration);
+            $target = database_path('migrations/'.$migration);
 
-            if (File::exists($target) && !$this->option('force')) {
+            if (File::exists($target) && ! $this->option('force')) {
                 continue;
             }
 
-            $stub = file_get_contents(__DIR__ . '/../../stubs/migrations/' . $migration);
+            $stub = file_get_contents(__DIR__.'/../../stubs/migrations/'.$migration);
 
             File::put($target, $stub);
             $published++;

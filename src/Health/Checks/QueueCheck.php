@@ -16,7 +16,7 @@ class QueueCheck implements HealthCheckInterface
             $connection = config('queue.default');
             $queue = Queue::connection($connection);
 
-            if (!$queue->connected()) {
+            if (! $queue->connected()) {
                 return HealthResult::warn('queue', 'Connection not verified');
             }
         } catch (\Throwable $e) {

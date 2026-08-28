@@ -5,19 +5,21 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class InspectCommand extends Command
 {
     protected $signature = 'fuse:inspect {model? : Model to inspect}';
+
     protected $description = 'Inspect a model and its related components';
 
     public function handle(): int
     {
         $model = $this->argument('model');
 
-        if (!$model) {
+        if (! $model) {
             $this->error('Please specify a model name.');
+
             return Command::FAILURE;
         }
 
@@ -25,14 +27,14 @@ class InspectCommand extends Command
         $this->line('==================');
 
         try {
-            $instance = new $model();
+            $instance = new $model;
             $relations = get_class_methods($instance);
 
             $this->info('Relations:');
             foreach ($relations as $relation) {
                 try {
                     $result = $instance->{$relation}();
-                    if ($result instanceof \Illuminate\Database\Eloquent\Relations\Relation) {
+                    if ($result instanceof Relation) {
                         $this->line("  - {$relation}()");
                     }
                 } catch (\Throwable $e) {
@@ -40,7 +42,8 @@ class InspectCommand extends Command
                 }
             }
         } catch (\Throwable $e) {
-            $this->error('Model not found: ' . $e->getMessage());
+            $this->error('Model not found: '.$e->getMessage());
+
             return Command::FAILURE;
         }
 

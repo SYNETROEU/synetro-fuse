@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Synetro\Fuse\Resources\ResourceManager;
 use Synetro\Fuse\Support\FuseExtensionManager;
@@ -53,6 +52,7 @@ class GenerateCommand extends Command
 
         if (empty($this->selectedComponents)) {
             $this->error('Please specify at least one component to generate.');
+
             return Command::FAILURE;
         }
 
@@ -73,8 +73,9 @@ class GenerateCommand extends Command
         $stub = $this->resolveStub($component, $extensions);
         $path = $this->resolvePath($name, $component);
 
-        if (file_exists($path) && !$this->option('force')) {
+        if (file_exists($path) && ! $this->option('force')) {
             $this->warn("  ~ {$component} already exists: {$path}");
+
             return;
         }
 
@@ -92,29 +93,29 @@ class GenerateCommand extends Command
             return $customStubs[$component];
         }
 
-        $stubPath = __DIR__ . '/../../stubs/' . $component . '.stub';
+        $stubPath = __DIR__.'/../../stubs/'.$component.'.stub';
 
         if (file_exists($stubPath)) {
             return $stubPath;
         }
 
-        return __DIR__ . '/../../stubs/default.stub';
+        return __DIR__.'/../../stubs/default.stub';
     }
 
     protected function resolvePath(string $name, string $component): string
     {
         $paths = [
-            'model' => app_path('Models/' . $name . '.php'),
-            'migration' => database_path('migrations/' . date('Y_m_d_His') . '_create_' . Str::snake(Str::plural($name)) . '_table.php'),
-            'factory' => database_path('factories/' . $name . 'Factory.php'),
-            'seed' => database_path('seeders/' . $name . 'Seeder.php'),
-            'controller' => app_path('Http/Controllers/' . $name . 'Controller.php'),
-            'resource' => app_path('Http/Resources/' . $name . 'Resource.php'),
-            'policy' => app_path('Policies/' . $name . 'Policy.php'),
-            'action' => app_path('Actions/' . $name . 'Action.php'),
-            'test' => tests_path('Feature/' . $name . 'Test.php'),
+            'model' => app_path('Models/'.$name.'.php'),
+            'migration' => database_path('migrations/'.date('Y_m_d_His').'_create_'.Str::snake(Str::plural($name)).'_table.php'),
+            'factory' => database_path('factories/'.$name.'Factory.php'),
+            'seed' => database_path('seeders/'.$name.'Seeder.php'),
+            'controller' => app_path('Http/Controllers/'.$name.'Controller.php'),
+            'resource' => app_path('Http/Resources/'.$name.'Resource.php'),
+            'policy' => app_path('Policies/'.$name.'Policy.php'),
+            'action' => app_path('Actions/'.$name.'Action.php'),
+            'test' => tests_path('Feature/'.$name.'Test.php'),
         ];
 
-        return $paths[$component] ?? app_path($name . '.php');
+        return $paths[$component] ?? app_path($name.'.php');
     }
 }

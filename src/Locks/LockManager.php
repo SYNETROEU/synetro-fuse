@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Locks;
 
+use Illuminate\Contracts\Cache\Repository;
+use Illuminate\Support\Facades\Cache;
+
 class LockManager
 {
     protected ?string $name = null;
+
     protected int $timeout = 60;
 
-    public function __construct(protected \Illuminate\Contracts\Cache\Repository $cache) {}
+    public function __construct(protected Repository $cache) {}
 
     public function for(string $name): self
     {
@@ -31,7 +35,7 @@ class LockManager
             throw new \InvalidArgumentException('Name is required. Call for() first.');
         }
 
-        $lock = \Illuminate\Support\Facades\Cache::lock("fuse.lock.{$this->name}", $this->timeout);
+        $lock = Cache::lock("fuse.lock.{$this->name}", $this->timeout);
 
         if ($lock->get()) {
             try {

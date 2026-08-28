@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 
 class OptimizeCommand extends Command
 {
@@ -22,6 +21,7 @@ class OptimizeCommand extends Command
             $this->callSilent('view:clear');
             $this->callSilent('event:clear');
             $this->info('✓ All caches cleared');
+
             return Command::SUCCESS;
         }
 

@@ -22,7 +22,7 @@ class OpenApiCommand extends Command
         $spec = [
             'openapi' => '3.0.0',
             'info' => [
-                'title' => config('app.name', 'Laravel') . ' API',
+                'title' => config('app.name', 'Laravel').' API',
                 'version' => '1.0.0',
             ],
             'paths' => [],

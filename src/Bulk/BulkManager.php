@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Bulk;
 
+use Illuminate\Database\Query\Builder;
+
 class BulkManager
 {
-    public function __construct(protected \Illuminate\Database\Query\Builder $query) {}
+    public function __construct(protected Builder $query) {}
 
     public function update(array $values): int
     {

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 class RoutesCommand extends Command
 {
     protected $signature = 'fuse:routes';
+
     protected $description = 'List Fuse registered routes';
 
     public function handle(): int
@@ -23,7 +24,7 @@ class RoutesCommand extends Command
         foreach ($fuseRoutes as $route) {
             if (str_contains($route->getPrefix(), 'fuse')) {
                 $rows[] = [
-                    $route->getPrefix() . $route->uri(),
+                    $route->getPrefix().$route->uri(),
                     implode('|', $route->methods()),
                     $route->getActionName(),
                 ];

@@ -11,6 +11,7 @@ use Synetro\Fuse\Resources\ResourceManager;
 class AboutCommand extends Command
 {
     protected $signature = 'fuse:about';
+
     protected $description = 'Display Fuse application information';
 
     public function handle(ResourceManager $resources): int
@@ -19,21 +20,21 @@ class AboutCommand extends Command
         $this->line('==============================');
         $this->newLine();
 
-        $this->info('Environment: ' . app()->environment());
-        $this->info('Laravel: ' . app()->version());
-        $this->info('PHP: ' . PHP_VERSION);
+        $this->info('Environment: '.app()->environment());
+        $this->info('Laravel: '.app()->version());
+        $this->info('PHP: '.PHP_VERSION);
         $this->newLine();
 
         $this->info('Routes:');
         $routes = Route::getRoutes();
-        $this->line('  Total: ' . $routes->count());
+        $this->line('  Total: '.$routes->count());
 
         $resourcesList = $resources->all();
-        if (!empty($resourcesList)) {
+        if (! empty($resourcesList)) {
             $this->info('');
             $this->info('Registered Resources:');
             foreach ($resourcesList as $resource) {
-                $this->line('  - ' . $resource);
+                $this->line('  - '.$resource);
             }
         }
 

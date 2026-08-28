@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Query;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Synetro\Fuse\Exceptions\QueryException;
 
 class FuseQuery
 {
     protected array $allowedFilters = [];
+
     protected array $allowedSorts = [];
+
     protected array $allowedFields = [];
+
     protected array $allowedIncludes = [];
+
     protected array $searchable = [];
 
     public function __construct(
@@ -34,7 +34,7 @@ class FuseQuery
 
     public function search(string $query): self
     {
-        if (!empty($this->searchable)) {
+        if (! empty($this->searchable)) {
             $this->query->where(function (Builder $q) use ($query) {
                 foreach ($this->searchable as $field) {
                     $q->orWhere($field, 'like', "%{$query}%");
@@ -48,7 +48,7 @@ class FuseQuery
     public function filter(array $filters): self
     {
         foreach ($filters as $key => $value) {
-            if (!in_array($key, $this->allowedFilters, true)) {
+            if (! in_array($key, $this->allowedFilters, true)) {
                 continue;
             }
 
@@ -64,7 +64,7 @@ class FuseQuery
 
     public function sort(string $column, ?string $direction = null): self
     {
-        if (!in_array(ltrim($column, '-'), $this->allowedSorts, true)) {
+        if (! in_array(ltrim($column, '-'), $this->allowedSorts, true)) {
             return $this;
         }
 
@@ -88,7 +88,7 @@ class FuseQuery
 
     public function fields(array $fields): self
     {
-        if (!empty($this->allowedFields)) {
+        if (! empty($this->allowedFields)) {
             $fields = array_intersect($fields, $this->allowedFields);
         }
 

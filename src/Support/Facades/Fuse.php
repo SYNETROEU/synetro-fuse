@@ -44,20 +44,20 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Synetro\Fuse\Support\FuseRealtime realtime()
  * @method static \Synetro\Fuse\Support\FuseBroadcast broadcast()
  * @method static \Synetro\Fuse\Support\FusePayment payment()
-  * @method static \Synetro\Fuse\Support\FuseSubscription subscription()
-  * @method static \Synetro\Fuse\Support\Fuse for(mixed $tenant)
-  * @method static void extend(string $name, callable $factory)
-  * @method static void macro(string $name, callable $macro)
-  * @method static bool hasExtension(string $name)
-  * @method static callable|null extension(string $name)
-  * @method static array extensions()
-  * @method static void registerHealthCheck(string $name, $check)
-  * @method static void registerDiscovery(string $type, string $class)
-  * @method static void registerGeneratorStub(string $component, string $path)
-  * @method static void subscribe(string $event, callable $listener)
-  *
-  * @see \Synetro\Fuse\Support\Fuse
-  */
+ * @method static \Synetro\Fuse\Support\FuseSubscription subscription()
+ * @method static \Synetro\Fuse\Support\Fuse for(mixed $tenant)
+ * @method static void extend(string $name, callable $factory)
+ * @method static void macro(string $name, callable $macro)
+ * @method static bool hasExtension(string $name)
+ * @method static callable|null extension(string $name)
+ * @method static array extensions()
+ * @method static void registerHealthCheck(string $name, $check)
+ * @method static void registerDiscovery(string $type, string $class)
+ * @method static void registerGeneratorStub(string $component, string $path)
+ * @method static void subscribe(string $event, callable $listener)
+ *
+ * @see \Synetro\Fuse\Support\Fuse
+ */
 class Fuse extends Facade
 {
     protected static function getFacadeAccessor(): string

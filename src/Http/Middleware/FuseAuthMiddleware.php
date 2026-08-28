@@ -12,7 +12,7 @@ class FuseAuthMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             return response()->json(['error' => 'Unauthenticated'], 401);
         }
 

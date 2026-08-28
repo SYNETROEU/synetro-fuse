@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Actions;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +17,7 @@ abstract class Action
 
     public static function run(mixed $payload): mixed
     {
-        return (new static())->handle($payload);
+        return (new static)->handle($payload);
     }
 
     public static function dispatch(mixed $payload): void

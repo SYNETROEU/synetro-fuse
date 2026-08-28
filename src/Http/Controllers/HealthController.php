@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Http\Controllers;
 
-use Synetro\Fuse\Health\HealthManager;
 use Illuminate\Http\JsonResponse;
+use Synetro\Fuse\Health\HealthManager;
 
 class HealthController
 {

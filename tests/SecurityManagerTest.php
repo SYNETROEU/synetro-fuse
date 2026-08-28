@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Tests;
 
-use Synetro\Fuse\Tests\TestCase;
 use Synetro\Fuse\Security\SecurityManager;
 use Synetro\Fuse\Security\SecurityResult;
 

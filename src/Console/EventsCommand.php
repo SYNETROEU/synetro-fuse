@@ -6,11 +6,11 @@ namespace Synetro\Fuse\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 
 class EventsCommand extends Command
 {
     protected $signature = 'fuse:events';
+
     protected $description = 'List application events';
 
     public function handle(): int
@@ -24,14 +24,14 @@ class EventsCommand extends Command
         ];
 
         foreach ($dirs as $dir) {
-            if (!File::exists($dir)) {
+            if (! File::exists($dir)) {
                 continue;
             }
 
             $files = File::allFiles($dir);
             foreach ($files as $file) {
                 $className = $file->getBasename('.php');
-                $this->line('  - ' . $className);
+                $this->line('  - '.$className);
             }
         }
 

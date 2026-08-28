@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Features;
 
-use Illuminate\Database\Connection;
-
 class Feature
 {
     public function __construct(
@@ -15,7 +13,7 @@ class Feature
 
     public function enabled(mixed $context = null): bool
     {
-        $cacheKey = "fuse.feature.{$this->key}." . ($context ? md5(serialize($context)) : 'global');
+        $cacheKey = "fuse.feature.{$this->key}.".($context ? md5(serialize($context)) : 'global');
 
         if ($this->manager->cache()) {
             return cache()->remember($cacheKey, $this->manager->ttl(), function () use ($context) {

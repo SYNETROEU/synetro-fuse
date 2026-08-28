@@ -1,19 +1,25 @@
 <?php
 
 declare(strict_types=1);
+use Synetro\Fuse\Features\FeatureServiceProvider;
+use Synetro\Fuse\Health\Checks\CacheCheck;
+use Synetro\Fuse\Health\Checks\DatabaseCheck;
+use Synetro\Fuse\Health\Checks\QueueCheck;
+use Synetro\Fuse\Health\Checks\StorageCheck;
+use Synetro\Fuse\Webhooks\WebhookServiceProvider;
 
 return [
     'name' => env('FUSE_APP_NAME', 'Fuse'),
 
     'providers' => [
-        \Synetro\Fuse\Features\FeatureServiceProvider::class,
-        \Synetro\Fuse\Webhooks\WebhookServiceProvider::class,
+        FeatureServiceProvider::class,
+        WebhookServiceProvider::class,
     ],
 
     'routes' => [
         'enabled' => env('FUSE_ROUTES', true),
         'prefix' => env('FUSE_ROUTE_PREFIX', 'fuse'),
-        'middleware' => ['web', 'api'],
+        'middleware' => ['api'],
     ],
 
     'middleware' => [
@@ -84,10 +90,10 @@ return [
         'enabled' => env('FUSE_HEALTH_ENABLED', true),
         'prefix' => '_health',
         'checks' => [
-            \Synetro\Fuse\Health\Checks\DatabaseCheck::class,
-            \Synetro\Fuse\Health\Checks\CacheCheck::class,
-            \Synetro\Fuse\Health\Checks\QueueCheck::class,
-            \Synetro\Fuse\Health\Checks\StorageCheck::class,
+            DatabaseCheck::class,
+            CacheCheck::class,
+            QueueCheck::class,
+            StorageCheck::class,
         ],
     ],
 

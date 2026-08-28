@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Idempotency;
 
+use Illuminate\Contracts\Cache\Repository;
+
 class IdempotencyManager
 {
     protected ?string $key = null;
+
     protected ?int $ttl = null;
 
-    public function __construct(protected \Illuminate\Contracts\Cache\Repository $cache) {}
+    public function __construct(protected Repository $cache) {}
 
     public function for(string $key): self
     {

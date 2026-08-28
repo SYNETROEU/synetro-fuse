@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 
 class SecurityCommand extends Command
 {
@@ -41,7 +40,7 @@ class SecurityCommand extends Command
         return [
             'name' => 'APP_KEY',
             'status' => $key && strlen($key) > 20 ? 'pass' : 'fail',
-            'message' => $key ? 'Set (' . strlen($key) . ' chars)' : 'Not set',
+            'message' => $key ? 'Set ('.strlen($key).' chars)' : 'Not set',
         ];
     }
 
@@ -117,7 +116,7 @@ class SecurityCommand extends Command
             match ($c['status']) {
                 'pass' => $this->style('✓', 'green'),
                 'warn' => $this->style('⚠', 'yellow'),
-                default  => $this->style('✗', 'red'),
+                default => $this->style('✗', 'red'),
             },
             $c['message'],
         ])->toArray();

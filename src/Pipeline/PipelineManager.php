@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Pipeline;
 
-use Illuminate\Support\Collection;
 use Illuminate\Pipeline\Pipeline as LaravelPipeline;
 
 class PipelineManager

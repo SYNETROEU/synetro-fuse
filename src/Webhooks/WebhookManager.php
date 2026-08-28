@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Webhooks;
 
-use Illuminate\Http\Client\Factory as HttpClient;
-use Illuminate\Support\Collection;
+use Illuminate\Http\Client\Factory;
 use Illuminate\Support\Facades\Http;
-use Synetro\Fuse\Exceptions\WebhookException;
 
 class WebhookManager
 {
     public function __construct(
         protected mixed $config,
-        protected \Illuminate\Http\Client\Factory $http,
+        protected Factory $http,
     ) {}
 
     public function for(string $name): Webhook
@@ -23,7 +21,7 @@ class WebhookManager
 
     public function send(string $url, string $event, mixed $payload, array $options = []): WebhookResponse
     {
-        $signature = hash_hmac('sha256', $event . json_encode($payload), $this->config['webhooks']['secret'] ?? config('app.key'));
+        $signature = hash_hmac('sha256', $event.json_encode($payload), $this->config['webhooks']['secret'] ?? config('app.key'));
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\File;
 class JobsCommand extends Command
 {
     protected $signature = 'fuse:jobs';
+
     protected $description = 'List application jobs';
 
     public function handle(): int
@@ -23,14 +24,14 @@ class JobsCommand extends Command
         ];
 
         foreach ($dirs as $dir) {
-            if (!File::exists($dir)) {
+            if (! File::exists($dir)) {
                 continue;
             }
 
             $files = File::allFiles($dir);
             foreach ($files as $file) {
                 $className = $file->getBasename('.php');
-                $this->line('  - ' . $className);
+                $this->line('  - '.$className);
             }
         }
 

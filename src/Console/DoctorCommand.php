@@ -8,7 +8,6 @@ use Illuminate\Console\Command;
 use Synetro\Fuse\Config\ConfigManager;
 use Synetro\Fuse\Database\DatabaseManager;
 use Synetro\Fuse\Health\HealthManager;
-use Synetro\Fuse\Support\Facades\Fuse;
 
 class DoctorCommand extends Command
 {
@@ -40,14 +39,14 @@ class DoctorCommand extends Command
         $checks[] = [
             'name' => 'PHP',
             'status' => version_compare(PHP_VERSION, '8.2.0', '>=') ? 'pass' : 'fail',
-            'message' => 'PHP ' . PHP_VERSION,
+            'message' => 'PHP '.PHP_VERSION,
         ];
 
         $laravelVersion = app()->version();
         $checks[] = [
             'name' => 'Laravel',
             'status' => version_compare($laravelVersion, '11.0.0', '>=') ? 'pass' : 'fail',
-            'message' => 'Laravel ' . $laravelVersion,
+            'message' => 'Laravel '.$laravelVersion,
         ];
 
         try {
@@ -92,7 +91,7 @@ class DoctorCommand extends Command
             match ($c['status']) {
                 'pass' => $this->style('✓', 'green'),
                 'warn' => $this->style('⚠', 'yellow'),
-                default  => $this->style('✗', 'red'),
+                default => $this->style('✗', 'red'),
             },
             $c['message'],
         ])->toArray();

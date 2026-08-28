@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 class DocsCommand extends Command
 {
     protected $signature = 'fuse:docs';
+
     protected $description = 'Generate application API documentation';
 
     public function handle(): int
