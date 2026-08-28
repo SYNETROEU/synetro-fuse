@@ -1,0 +1,42 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Synetro\Fuse\Support\Facades;
+
+use Illuminate\Support\Facades\Facade;
+
+/**
+ * @method static \Synetro\Fuse\Resources\ResourceManager resource(string $model)
+ * @method static mixed config(string|null $key = null, mixed $default = null)
+ * @method static \Synetro\Fuse\Secrets\SecretsManager secret(string $key)
+ * @method static \Synetro\Fuse\Features\FeatureManager feature(string $key)
+ * @method static \Synetro\Fuse\Health\HealthManager health()
+ * @method static \Synetro\Fuse\Webhooks\WebhookManager webhook(string $name)
+ * @method static mixed cache(string $key, callable|null $callback = null)
+ * @method static mixed cacheFor(string $key, int $seconds, callable $callback)
+ * @method static void forget(string $key)
+ * @method static \Synetro\Fuse\Audit\AuditManager audit()
+ * @method static \Synetro\Fuse\Auth\AuthManager auth()
+ * @method static \Synetro\Fuse\Api\ApiManager api()
+ * @method static \Synetro\Fuse\Security\SecurityManager security()
+ * @method static \Synetro\Fuse\Metrics\MetricsManager metrics()
+ * @method static \Synetro\Fuse\Database\DatabaseManager database()
+ * @method static \Synetro\Fuse\Pipeline\PipelineManager pipeline(array $steps)
+ * @method static \Synetro\Fuse\Logging\LogManager log()
+ * @method static \Synetro\Fuse\Mail\MailManager mail()
+ * @method static \Synetro\Fuse\Query\QueryManager query(string $model)
+ * @method static \Synetro\Fuse\Files\FileManager file()
+ * @method static \Synetro\Fuse\Notifications\NotificationManager notify()
+ * @method static \Synetro\Fuse\Http\HttpManager http()
+ * @method static \Synetro\Fuse\Support\Fuse for(mixed $tenant)
+ *
+ * @see \Synetro\Fuse\Support\Fuse
+ */
+class Fuse extends Facade
+{
+    protected static function getFacadeAccessor(): string
+    {
+        return \Synetro\Fuse\Support\Fuse::class;
+    }
+}

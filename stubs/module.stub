@@ -1,0 +1,10 @@
+<?php declare(strict_types=1);
+
+namespace {{namespace}};
+
+use Synetro\Fuse\Traits\HasFuse;
+
+class {{class}}
+{
+    use HasFuse;
+}

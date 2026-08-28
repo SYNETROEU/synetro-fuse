@@ -1,0 +1,13 @@
+<?php declare(strict_types=1);
+
+namespace {{namespace}};
+
+use Synetro\Fuse\Actions\Action;
+
+class {{class}} extends Action
+{
+    public function handle(mixed $payload): mixed
+    {
+        return $payload;
+    }
+}

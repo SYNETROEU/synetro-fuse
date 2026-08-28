@@ -1,0 +1,16 @@
+<?php declare(strict_types=1);
+
+namespace {{namespace}};
+
+use {{modelNamespace}};
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class {{class}}Policy
+{
+    use HandlesAuthorization;
+
+    public function before(?mixed $user, string $ability): ?bool
+    {
+        return null;
+    }
+}

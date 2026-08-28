@@ -1,0 +1,38 @@
+<?php declare(strict_types=1);
+
+namespace {{namespace}};
+
+use {{modelNamespace}};
+use {{resourceNamespace}};
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+
+class {{class}}Controller extends Controller
+{
+    public function index(Request $request): AnonymousResourceCollection
+    {
+        return {{class}}Resource::collection({{model}}::all());
+    }
+
+    public function store(Request $request): {{class}}Resource
+    {
+        $model = {{model}}::create($request->validated());
+        return new {{class}}Resource($model);
+    }
+
+    public function show({{model}} ${{model_snake}}): {{class}}Resource
+    {
+        return new {{class}}Resource(${{model_snake}});
+    }
+
+    public function update(Request $request, {{model}} ${{model_snake}}): {{class}}Resource
+    {
+        ${{model_snake}}->update($request->validated());
+        return new {{class}}Resource(${{model_snake}});
+    }
+
+    public function destroy({{model}} ${{model_snake}}): void
+    {
+        ${{model_snake}}->delete();
+    }
+}
