@@ -37,11 +37,13 @@ use Synetro\Fuse\Validation\Validator;
 use Synetro\Fuse\Webhooks\WebhookManager;
 use Synetro\Fuse\Secrets\SecretsManager;
 use Synetro\Fuse\Audit\AuditManager;
+use Synetro\Fuse\Support\FuseExtensionManager;
 
 class Fuse
 {
     public function __construct(
         protected Container $app,
+        protected FuseExtensionManager $extensions,
     ) {}
 
     public function resource(string $model): ResourceManager
@@ -242,5 +244,50 @@ class Fuse
     public function for(mixed $tenant): Fuse
     {
         return new FuseTenant($this->app, $tenant);
+    }
+
+    public function extend(string $name, callable $factory): void
+    {
+        $this->extensions->extend($name, $factory);
+    }
+
+    public function macro(string $name, callable $macro): void
+    {
+        $this->extensions->macro($name, $macro);
+    }
+
+    public function hasExtension(string $name): bool
+    {
+        return $this->extensions->has($name);
+    }
+
+    public function extension(string $name): ?callable
+    {
+        return $this->extensions->get($name);
+    }
+
+    public function extensions(): array
+    {
+        return $this->extensions->all();
+    }
+
+    public function registerHealthCheck(string $name, $check): void
+    {
+        $this->extensions->registerHealthCheck($name, $check);
+    }
+
+    public function registerDiscovery(string $type, string $class): void
+    {
+        $this->extensions->registerDiscovery($type, $class);
+    }
+
+    public function registerGeneratorStub(string $component, string $path): void
+    {
+        $this->extensions->registerGeneratorStub($component, $path);
+    }
+
+    public function subscribe(string $event, callable $listener): void
+    {
+        $this->extensions->subscribe($event, $listener);
     }
 }

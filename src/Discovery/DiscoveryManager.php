@@ -8,6 +8,7 @@ class DiscoveryManager
 {
     protected array $discovered = [];
     protected bool $enabled = true;
+    protected array $customClasses = [];
 
     public function discover(string $type, string $namespace): array
     {
@@ -29,9 +30,18 @@ class DiscoveryManager
 
         $results = $this->scanNamespace($namespace);
 
+        if (!empty($this->customClasses[$type])) {
+            $results = array_merge($results, $this->customClasses[$type]);
+        }
+
         \Illuminate\Support\Facades\Cache::put($cacheKey, $results, 3600);
 
         return $this->discovered[$type] = $results;
+    }
+
+    public function register(string $type, string $class): void
+    {
+        $this->customClasses[$type][] = $class;
     }
 
     public function auto(): array

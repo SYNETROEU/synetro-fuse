@@ -33,9 +33,10 @@ use Synetro\Fuse\Console\JobsCommand;
 use Synetro\Fuse\Console\OpenApiCommand;
 use Synetro\Fuse\Console\DocsCommand;
 use Synetro\Fuse\Console\InspectCommand;
-use Synetro\Fuse\Console\FuseAuthCommand;
 use Synetro\Fuse\Console\SecurityCommand;
+use Synetro\Fuse\Console\FuseAuthCommand;
 use Synetro\Fuse\Console\CleanupCommand;
+use Synetro\Fuse\Support\FuseExtensionManager;
 use Synetro\Fuse\Validation\Validator;
 use Synetro\Fuse\Bulk\BulkManager;
 use Synetro\Fuse\ImportExport\ImportExportManager;
@@ -76,8 +77,8 @@ class FuseServiceProvider extends ServiceProvider
                 OpenApiCommand::class,
                 DocsCommand::class,
                 InspectCommand::class,
-                FuseAuthCommand::class,
                 SecurityCommand::class,
+                FuseAuthCommand::class,
                 CleanupCommand::class,
             ]);
         }
@@ -158,8 +159,12 @@ class FuseServiceProvider extends ServiceProvider
             return new FileManager($app['filesystem']->disk());
         });
 
+        $this->app->singleton(FuseExtensionManager::class, function ($app) {
+            return new FuseExtensionManager($app);
+        });
+
         $this->app->singleton(\Synetro\Fuse\Support\Fuse::class, function ($app) {
-            return new \Synetro\Fuse\Support\Fuse($app);
+            return new \Synetro\Fuse\Support\Fuse($app, $app[FuseExtensionManager::class]);
         });
 
         $this->app->singleton(Validator::class, function ($app) {

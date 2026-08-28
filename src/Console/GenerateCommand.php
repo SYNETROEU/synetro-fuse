@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Synetro\Fuse\Resources\ResourceManager;
+use Synetro\Fuse\Support\FuseExtensionManager;
 
 class GenerateCommand extends Command
 {
@@ -30,7 +31,7 @@ class GenerateCommand extends Command
 
     protected array $selectedComponents = [];
 
-    public function handle(ResourceManager $resources): int
+    public function handle(ResourceManager $resources, FuseExtensionManager $extensions): int
     {
         $name = Str::studly($this->argument('name'));
 
@@ -58,7 +59,7 @@ class GenerateCommand extends Command
         $this->info("Generating {$name}...");
 
         foreach ($this->selectedComponents as $component) {
-            $this->generateComponent($name, $component);
+            $this->generateComponent($name, $component, $extensions);
         }
 
         $this->newLine();
@@ -67,9 +68,9 @@ class GenerateCommand extends Command
         return Command::SUCCESS;
     }
 
-    protected function generateComponent(string $name, string $component): void
+    protected function generateComponent(string $name, string $component, FuseExtensionManager $extensions): void
     {
-        $stub = $this->resolveStub($component);
+        $stub = $this->resolveStub($component, $extensions);
         $path = $this->resolvePath($name, $component);
 
         if (file_exists($path) && !$this->option('force')) {
@@ -83,8 +84,14 @@ class GenerateCommand extends Command
         $this->info("  ✓ {$component}: {$path}");
     }
 
-    protected function resolveStub(string $component): string
+    protected function resolveStub(string $component, FuseExtensionManager $extensions): string
     {
+        $customStubs = $extensions->generatorStubs();
+
+        if (isset($customStubs[$component]) && file_exists($customStubs[$component])) {
+            return $customStubs[$component];
+        }
+
         $stubPath = __DIR__ . '/../../stubs/' . $component . '.stub';
 
         if (file_exists($stubPath)) {
