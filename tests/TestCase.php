@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Synetro\Fuse\Testing;
+namespace Synetro\Fuse\Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
@@ -17,13 +17,6 @@ abstract class TestCase extends OrchestraTestCase
         ];
     }
 
-    protected function getPackageAliases($app): array
-    {
-        return [
-            'Fuse' => \Synetro\Fuse\Support\Facades\Fuse::class,
-        ];
-    }
-
     protected function defineEnvironment($app): void
     {
         $app['config']->set('database.default', 'sqlite');
@@ -32,6 +25,7 @@ abstract class TestCase extends OrchestraTestCase
             'database' => ':memory:',
             'prefix' => '',
         ]);
+        $app['config']->set('app.key', 'base64:'.base64_encode(str_repeat('a', 32)));
     }
 
     protected function setUp(): void

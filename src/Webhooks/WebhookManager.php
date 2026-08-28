@@ -12,8 +12,8 @@ use Synetro\Fuse\Exceptions\WebhookException;
 class WebhookManager
 {
     public function __construct(
-        protected array $config,
-        protected HttpClient $http,
+        protected mixed $config,
+        protected \Illuminate\Http\Client\Factory $http,
     ) {}
 
     public function for(string $name): Webhook

@@ -33,6 +33,18 @@ use Synetro\Fuse\Console\JobsCommand;
 use Synetro\Fuse\Console\OpenApiCommand;
 use Synetro\Fuse\Console\DocsCommand;
 use Synetro\Fuse\Console\InspectCommand;
+use Synetro\Fuse\Console\FuseAuthCommand;
+use Synetro\Fuse\Console\SecurityCommand;
+use Synetro\Fuse\Console\CleanupCommand;
+use Synetro\Fuse\Validation\Validator;
+use Synetro\Fuse\Bulk\BulkManager;
+use Synetro\Fuse\ImportExport\ImportExportManager;
+use Synetro\Fuse\Idempotency\IdempotencyManager;
+use Synetro\Fuse\Locks\LockManager;
+use Synetro\Fuse\RateLimit\RateLimiter;
+use Synetro\Fuse\Usage\UsageManager;
+use Synetro\Fuse\Profiling\ProfilerManager;
+use Synetro\Fuse\Discovery\DiscoveryManager;
 
 class FuseServiceProvider extends ServiceProvider
 {
@@ -64,6 +76,9 @@ class FuseServiceProvider extends ServiceProvider
                 OpenApiCommand::class,
                 DocsCommand::class,
                 InspectCommand::class,
+                FuseAuthCommand::class,
+                SecurityCommand::class,
+                CleanupCommand::class,
             ]);
         }
 
@@ -84,7 +99,7 @@ class FuseServiceProvider extends ServiceProvider
     protected function registerCoreBindings(): void
     {
         $this->app->singleton(ConfigManager::class, function ($app) {
-            return new ConfigManager($app['config'], $app['cache.store'], $app['db']);
+            return new ConfigManager($app['config'], $app['cache.store'], $app['db']->connection());
         });
 
         $this->app->singleton(SecretsManager::class, function ($app) {
@@ -100,11 +115,11 @@ class FuseServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(AuditManager::class, function ($app) {
-            return new AuditManager($app['db'], $app['events']);
+            return new AuditManager($app['db']->connection(), $app['events']);
         });
 
         $this->app->singleton(WebhookManager::class, function ($app) {
-            return new WebhookManager($app['config'], $app['http.client']);
+            return new WebhookManager($app['config'], \Illuminate\Support\Facades\Http::getFacadeRoot());
         });
 
         $this->app->singleton(ResourceManager::class, function ($app) {
@@ -116,11 +131,11 @@ class FuseServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(ActionManager::class, function ($app) {
-            return new ActionManager($app['events'], $app['queue']);
+            return new ActionManager($app['events'], $app['queue']->connection());
         });
 
         $this->app->singleton(HealthManager::class, function ($app) {
-            return new HealthManager($app['db'], $app['cache.store'], $app['queue.failures'], $app['filesystem']);
+            return new HealthManager($app['db']->connection(), $app['cache.store'], $app['queue']->connection(), $app['filesystem']->disk());
         });
 
         $this->app->singleton(SecurityManager::class, function ($app) {
@@ -140,18 +155,56 @@ class FuseServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(FileManager::class, function ($app) {
-            return new FileManager($app['filesystem']);
+            return new FileManager($app['filesystem']->disk());
         });
 
         $this->app->singleton(\Synetro\Fuse\Support\Fuse::class, function ($app) {
             return new \Synetro\Fuse\Support\Fuse($app);
+        });
+
+        $this->app->singleton(Validator::class, function ($app) {
+            return new Validator([], []);
+        });
+
+        $this->app->singleton(BulkManager::class, function ($app) {
+            return new BulkManager(\Illuminate\Database\Query\Builder::query(\Illuminate\Support\Facades\DB::connection()));
+        });
+
+        $this->app->singleton(ImportExportManager::class, function ($app) {
+            return new ImportExportManager();
+        });
+
+        $this->app->singleton(IdempotencyManager::class, function ($app) {
+            return new IdempotencyManager($app['cache.store']);
+        });
+
+        $this->app->singleton(LockManager::class, function ($app) {
+            return new LockManager($app['cache.store']);
+        });
+
+        $this->app->singleton(RateLimiter::class, function ($app) {
+            return new RateLimiter($app['cache.store']);
+        });
+
+        $this->app->singleton(UsageManager::class, function ($app) {
+            return new UsageManager($app['cache.store']);
+        });
+
+        $this->app->singleton(ProfilerManager::class, function ($app) {
+            return new ProfilerManager();
+        });
+
+        $this->app->singleton(DiscoveryManager::class, function ($app) {
+            return new DiscoveryManager();
         });
     }
 
     protected function registerFacades(): void
     {
         if (class_exists(\Illuminate\Support\Facades\Facade::class)) {
-            class_alias(\Synetro\Fuse\Support\Facades\Fuse::class, 'Fuse');
+            if (!class_exists('Fuse', false)) {
+                class_alias(\Synetro\Fuse\Support\Facades\Fuse::class, 'Fuse');
+            }
         }
     }
 }

@@ -25,7 +25,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['model', 'model_id']);
-            $table->index(['actor_type', 'actor_id']);
         });
     }
 

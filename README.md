@@ -190,6 +190,44 @@ Product::fuse()
     ->fields(['id', 'name', 'price'])
     ->paginate();
 
+// Validation
+Fuse::validate($data, [
+    'name' => 'required|string',
+    'email' => 'required|email',
+]);
+
+// Bulk operations
+Fuse::bulk($products)->update(['status' => 'archived']);
+
+// Import / Export
+Fuse::import(Product::class, $file);
+Fuse::export(Product::class)->format('csv')->download();
+
+// Idempotency
+Fuse::idempotent($request)->run(fn () => CreateOrder::run($data));
+
+// Distributed locks
+Fuse::lock("payment:{$payment->id}")->run(fn () => processPayment($payment));
+
+// Rate limiting
+Fuse::limit('login')->perMinute(5)->by($request->ip())->check();
+
+// Usage / Quota
+Fuse::usage($user, 'projects')->limit(10)->consume();
+Fuse::quota('storage')->for($tenant)->consume(500);
+
+// Query profiler
+Fuse::profile(fn () => expensiveOperation());
+
+// Security diagnostics
+// php artisan fuse:security
+
+// Auth scaffolding
+// php artisan fuse:auth
+
+// Cleanup
+// php artisan fuse:cleanup
+
 // Reusable filters
 Fuse::filter('active', fn ($query) => $query->where('status', 'active'));
 Product::fuse()->filter('active')->get();
@@ -203,25 +241,33 @@ Product::fuse()->filter('active')->get();
 |---------|-------------|
 | **Resources / CRUD** | One-line resource registration with search, filters, sorting, pagination, and authorization |
 | **Query System** | Secure, explicit query building with allow-lists for search, filter, sort, include, and fields |
+| **Bulk Operations** | Bulk update/delete with transactions, chunking, and authorization |
+| **Import / Export** | CSV/JSON import and export with chunking, validation, and failed-row reports |
 | **Actions** | Simple action abstraction with transactions, queues, and events |
+| **Pipelines** | Synchronous and queued workflow orchestration |
 | **API Responses** | Consistent JSON envelope, pagination metadata, and machine-readable errors |
+| **Validation** | Concise validation with Laravel's Validator underneath |
 | **DB Configuration** | Database-backed configuration with caching, typed access, and environment overrides |
 | **Secrets** | Encrypted secrets management with log redaction and rotation support |
 | **Feature Flags** | Global, user-targeted, and percentage rollout feature flags |
+| **Multi-Tenancy** | Tenant-aware configuration and feature flags (`Fuse::for($tenant)`) |
 | **Caching** | Simple cache helpers with automatic invalidation |
+| **Idempotency** | First-class idempotency for payments and distributed systems |
+| **Distributed Locks** | Atomic lock wrapper with timeout, block, and owner support |
+| **Rate Limiting** | Fluent rate limiting integrated with Laravel RateLimiter |
+| **Usage / Quota** | Usage tracking, quotas, and entitlements |
 | **Webhooks** | Outgoing webhooks with HMAC signatures, retries, and queued delivery |
 | **Audit Logging** | Automatic model auditing with sensitive field exclusion |
 | **Health Checks** | Database, cache, queue, and storage health monitoring |
-| **Security** | Security headers, suspicious login detection, and sensitive-data redaction |
+| **Security** | Security headers, diagnostics, and sensitive-data redaction |
 | **Metrics** | Counter and timer metrics |
 | **Files** | File attachment helpers built on Laravel Filesystem |
 | **Notifications** | Simple notification routing |
 | **Logging** | Structured logging with automatic request context |
-| **Pipelines** | Synchronous and queued workflow orchestration |
 | **Testing** | Flow testing helpers, fake managers, and assertions |
 | **Generators** | Code generators for models, controllers, actions, tests, and full CRUD |
 | **OpenAPI** | Automatic OpenAPI documentation generation |
-| **Artisan Commands** | `install`, `doctor`, `optimize`, `make`, `openapi`, `inspect`, and more |
+| **Artisan Commands** | `install`, `doctor`, `security`, `auth`, `cleanup`, `make`, `openapi`, `inspect`, and more |
 
 ---
 
@@ -231,16 +277,26 @@ Product::fuse()->filter('active')->get();
 
 - [Resources & CRUD](docs/Resources.md)
 - [Query System](docs/Query.md)
+- [Bulk Operations](docs/Bulk.md)
+- [Import / Export](docs/ImportExport.md)
 - [Actions & Pipelines](docs/Actions.md)
 - [API Responses](docs/Api.md)
+- [Validation](docs/Validation.md)
 - [Configuration](docs/Configuration.md)
 - [Secrets](docs/Secrets.md)
 - [Feature Flags](docs/Features.md)
+- [Tenancy](docs/Tenancy.md)
+- [Caching](docs/Caching.md)
+- [Idempotency](docs/Idempotency.md)
+- [Locks](docs/Locks.md)
+- [Rate Limiting](docs/RateLimit.md)
+- [Usage & Quotas](docs/Usage.md)
 - [Webhooks](docs/Webhooks.md)
 - [Audit Logging](docs/Audit.md)
 - [Health Checks](docs/Health.md)
-- [Testing](docs/Testing.md)
 - [Security](docs/Security.md)
+- [Metrics](docs/Metrics.md)
+- [Testing](docs/Testing.md)
 - [Generators](docs/Generators.md)
 - [Extending Fuse](docs/Extending.md)
 
@@ -249,9 +305,12 @@ Product::fuse()->filter('active')->get();
 ```bash
 php artisan fuse:install          # Install the package
 php artisan fuse:doctor           # Run diagnostics
+php artisan fuse:security         # Security diagnostics
 php artisan fuse:optimize         # Optimize caches
 php artisan fuse:make Product     # Generate a component
 php artisan fuse:make Product --full  # Generate full CRUD
+php artisan fuse:auth             # Scaffold authentication
+php artisan fuse:cleanup          # Cleanup expired data
 php artisan fuse:about            # Application overview
 php artisan fuse:routes           # List Fuse routes
 php artisan fuse:models           # List models
@@ -355,6 +414,7 @@ Fuse takes security seriously. If you discover a security vulnerability, please 
 - All model fields exposed via API must be explicitly configured
 - Audit logs exclude sensitive fields by default (`password`, `api_token`, etc.)
 - Security headers are configurable and enabled by default
+- `php artisan fuse:security` diagnoses APP_KEY, APP_DEBUG, HTTPS, cookies, CSRF, CORS, and more
 
 ---
 
@@ -381,17 +441,49 @@ vendor/bin/pint
 
 ## Roadmap
 
-- [ ] Full CRUD generator with tests, factories, and seeders
-- [ ] Multi-tenancy integration
-- [ ] Admin UI metadata for settings
-- [ ] Image processing helpers (when intervention/image is installed)
-- [ ] Advanced query filters (whereBetween, whereDate, whereNull, aggregates)
-- [ ] Scheduled activation for feature flags
-- [ ] Webhook replay support
-- [ ] Deployment checks (`fuse:deploy-check`)
-- [ ] Module system (`fuse:make-module`)
+### Completed
+- [x] Package skeleton, service provider, facade, and helpers
+- [x] Configuration system (`config/fuse.php`)
+- [x] Install command and artisan commands
+- [x] Database migrations (configs, secrets, features, audits, webhooks, files)
+- [x] DB-backed configuration with caching
+- [x] Secrets manager with encryption and log redaction
+- [x] Feature flags with rollout support
+- [x] CRUD Resource system
+- [x] Query system with allow-lists
+- [x] Actions and Pipelines
+- [x] API response layer with envelope
+- [x] Health checks (database, cache, queue, storage)
+- [x] Security manager and diagnostics
+- [x] Logging, metrics, and notifications
+- [x] Webhooks (outgoing and incoming)
+- [x] Audit logging with traits
+- [x] Caching helpers
+- [x] File attachment helpers
+- [x] Testing helpers (Flow, FakeManager)
+- [x] Code generators and stubs
+- [x] OpenAPI generation command
+- [x] Application inspection commands
+- [x] Validation helpers
+- [x] Bulk operations
+- [x] Import/Export
+- [x] Idempotency
+- [x] Distributed locks
+- [x] Rate limiting
+- [x] Usage/Quota tracking
+- [x] Query profiler
+- [x] Auto-discovery
+- [x] Auth scaffolding
+- [x] Security diagnostics
+- [x] Maintenance/cleanup
 
-See [ROADMAP.md](ROADMAP.md) for details.
+### Philosophy
+
+We will **not** add features that merely rename Laravel APIs. Every feature must answer:
+
+> What annoying boilerplate does this eliminate?
+
+If the answer is unclear, we won't implement it.
 
 ---
 
@@ -403,10 +495,10 @@ Fuse is open-source software licensed under the [MIT license](LICENSE).
 
 ## About Synetro
 
-Fuse is built by [Synetro](https://synetro.dev). We build tools that make Laravel development faster, safer, and more enjoyable.
+Fuse is built by [Synetro](https://synetro.eu).
 
 <div align="center">
 
-[Website](https://synetro.dev) &nbsp;•&nbsp; [GitHub](https://github.com/synetro) &nbsp;•&nbsp; [Twitter](https://twitter.com/synetro)
+[Website](https://synetro.eu) &nbsp;•&nbsp; [GitHub](https://github.com/synetroeu)
 
 </div>

@@ -26,14 +26,14 @@
         "illuminate/console": "^11.0|^12.0|^13.0",
         "illuminate/redis": "^11.0|^12.0|^13.0",
         "illuminate/encryption": "^11.0|^12.0|^13.0",
-        "illuminate/logging": "^11.0|^12.0|^13.0",
         "illuminate/container": "^11.0|^12.0|^13.0"
     },
     "require-dev": {
         "orchestra/testbench": "^8.0|^9.0",
         "phpunit/phpunit": "^10.0|^11.0",
         "mockery/mockery": "^1.5|^2.0",
-        "laravel/pint": "^1.0"
+        "laravel/pint": "^1.0",
+        "laravel/framework": "^11.0|^12.0"
     },
     "autoload": {
         "psr-4": {
@@ -64,6 +64,9 @@
         "sort-packages": true,
         "allow-plugins": {
             "php-http/discovery": true
+        },
+        "audit": {
+            "block-insecure": false
         }
     }
 }

@@ -41,7 +41,7 @@ class SecurityManager
         return substr($value, 0, $visibleChars) . str_repeat('*', strlen($value) - ($visibleChars * 2)) . substr($value, -$visibleChars);
     }
 
-    public function token(string $length = 32): string
+    public function token(int $length = 32): string
     {
         return Str::random($length);
     }

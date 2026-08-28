@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Logging;
 
-use Illuminate\Log\LogManager;
+use Illuminate\Log\LogManager as IlluminateLogManager;
 use Illuminate\Support\Collection;
 
 class LogManager
 {
     public function __construct(
-        protected LogManager $log,
+        protected IlluminateLogManager $log,
     ) {}
 
     public function event(string $name, array $context = []): self

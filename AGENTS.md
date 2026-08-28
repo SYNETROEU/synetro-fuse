@@ -30,24 +30,33 @@ src/
 ├── Actions/      - Action abstraction and manager
 ├── Api/          - API response formatting
 ├── Auth/         - Authorization helpers
+├── Bulk/         - Bulk Eloquent operations (update, delete, restore)
 ├── Cache/        - Cache helpers
 ├── Config/       - DB-backed configuration
-├── Console/      - Artisan commands
+├── Console/      - Artisan commands (install, doctor, auth, security, cleanup, ...)
 ├── Database/     - Database diagnostics
+├── Discovery/    - Auto-discovery of Actions, Policies, Resources, etc.
 ├── Exceptions/   - Custom exceptions
 ├── Features/     - Feature flags
 ├── Files/        - File attachment helpers
 ├── Health/       - Health checks
 ├── Http/         - HTTP client and middleware
+├── Idempotency/  - Idempotent execution wrapper
+├── ImportExport/ - CSV/JSON import and export with chunking
+├── Locks/        - Distributed lock wrapper using atomic locks
 ├── Logging/      - Logging helpers
 ├── Mail/         - Mail helpers
 ├── Metrics/      - Metrics
 ├── Notifications - Notification helpers
+├── Profiling/    - Query profiling (N+1, duplicates, memory)
 ├── Query/        - Query builder helpers
+├── RateLimit/    - Rate limiting wrapper using Laravel RateLimiter
 ├── Resources/    - CRUD resource system
 ├── Security/     - Security utilities
 ├── Support/      - Core Fuse class and Facade
 ├── Testing/      - Testing helpers
+├── Usage/        - Usage counters and quota management
+├── Validation/   - Concise validation wrapper around Laravel Validator
 ├── Webhooks/     - Webhook system
 └── Workflow/     - Pipeline/workflow system
 

@@ -22,6 +22,8 @@ Thumbs.db
 # Composer
 composer.lock
 
+AGENTS.md
+
 # Testing
 /phpunit.xml
 

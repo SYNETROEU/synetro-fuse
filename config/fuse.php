@@ -94,4 +94,42 @@ return [
     'generators' => [
         'namespace' => 'App\\Features',
     ],
+
+    'validation' => [
+        'enabled' => true,
+    ],
+
+    'bulk' => [
+        'chunk_size' => 1000,
+        'authorize' => true,
+    ],
+
+    'import_export' => [
+        'chunk_size' => 1000,
+    ],
+
+    'idempotency' => [
+        'ttl' => 3600,
+    ],
+
+    'locks' => [
+        'timeout' => 60,
+    ],
+
+    'rate_limit' => [
+        'enabled' => true,
+    ],
+
+    'usage' => [
+        'enabled' => true,
+    ],
+
+    'profiling' => [
+        'enabled' => true,
+    ],
+
+    'discovery' => [
+        'enabled' => true,
+        'cache_ttl' => 3600,
+    ],
 ];

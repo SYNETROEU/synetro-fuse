@@ -15,12 +15,13 @@ class FuseApiTest extends TestCase
 
     public function test_feature_manager_can_be_resolved(): void
     {
-        $this->assertInstanceOf(\Synetro\Fuse\Features\FeatureManager::class, \Synetro\Fuse\Support\Facades\Fuse::feature('test'));
+        $this->assertInstanceOf(\Synetro\Fuse\Features\Feature::class, \Synetro\Fuse\Support\Facades\Fuse::feature('test'));
     }
 
     public function test_cache_manager_can_be_resolved(): void
     {
-        $this->assertInstanceOf(\Synetro\Fuse\Cache\FuseCacheManager::class, \Synetro\Fuse\Support\Facades\Fuse::cache('test'));
+        $result = \Synetro\Fuse\Support\Facades\Fuse::cacheFor('test', 60, fn () => 'cached');
+        $this->assertSame('cached', $result);
     }
 
     public function test_health_manager_can_be_resolved(): void
@@ -56,5 +57,46 @@ class FuseApiTest extends TestCase
     public function test_auth_manager_can_be_resolved(): void
     {
         $this->assertInstanceOf(\Synetro\Fuse\Auth\AuthManager::class, \Synetro\Fuse\Support\Facades\Fuse::auth());
+    }
+
+    public function test_validation_manager_can_be_resolved(): void
+    {
+        $validator = \Synetro\Fuse\Support\Facades\Fuse::validate([], []);
+        $this->assertInstanceOf(\Synetro\Fuse\Validation\Validator::class, $validator);
+    }
+
+    public function test_idempotency_manager_can_be_resolved(): void
+    {
+        $manager = \Synetro\Fuse\Support\Facades\Fuse::idempotent('key');
+        $this->assertInstanceOf(\Synetro\Fuse\Idempotency\IdempotencyManager::class, $manager);
+    }
+
+    public function test_lock_manager_can_be_resolved(): void
+    {
+        $manager = \Synetro\Fuse\Support\Facades\Fuse::lock('name');
+        $this->assertInstanceOf(\Synetro\Fuse\Locks\LockManager::class, $manager);
+    }
+
+    public function test_rate_limiter_can_be_resolved(): void
+    {
+        $limiter = \Synetro\Fuse\Support\Facades\Fuse::limit('name');
+        $this->assertInstanceOf(\Synetro\Fuse\RateLimit\RateLimiter::class, $limiter);
+    }
+
+    public function test_usage_manager_can_be_resolved(): void
+    {
+        $manager = \Synetro\Fuse\Support\Facades\Fuse::usage('user', 'feature');
+        $this->assertInstanceOf(\Synetro\Fuse\Usage\UsageManager::class, $manager);
+    }
+
+    public function test_quota_manager_can_be_resolved(): void
+    {
+        $manager = \Synetro\Fuse\Support\Facades\Fuse::quota('storage');
+        $this->assertInstanceOf(\Synetro\Fuse\Usage\UsageManager::class, $manager);
+    }
+
+    public function test_discovery_manager_can_be_resolved(): void
+    {
+        $this->assertInstanceOf(\Synetro\Fuse\Discovery\DiscoveryManager::class, \Synetro\Fuse\Support\Facades\Fuse::auto());
     }
 }

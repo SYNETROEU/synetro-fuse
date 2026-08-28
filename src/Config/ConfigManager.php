@@ -73,10 +73,14 @@ class ConfigManager
     protected function resolve(string $key, mixed $default): mixed
     {
         if (config('fuse.config.driver') === 'database') {
-            $item = ConfigModel::where('key', $key)->first();
+            try {
+                $item = ConfigModel::where('key', $key)->first();
 
-            if ($item) {
-                return $this->unserialize($item->value);
+                if ($item) {
+                    return $this->unserialize($item->value);
+                }
+            } catch (\Throwable $e) {
+                // Table may not exist yet; fall back to Laravel config
             }
         }
 

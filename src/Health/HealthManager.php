@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Health;
 
 use Illuminate\Cache\CacheManager;
+use Illuminate\Cache\Repository;
 use Illuminate\Database\Connection;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Queue\QueueManager;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Queue\Queue;
 use Synetro\Fuse\Health\Checks\HealthCheckInterface;
 
 class HealthManager
@@ -18,9 +19,9 @@ class HealthManager
 
     public function __construct(
         protected Connection $db,
-        protected CacheManager $cache,
-        protected QueueManager $queue,
-        protected Filesystem $files,
+        protected Repository $cache,
+        protected Queue $queue,
+        protected FilesystemAdapter $files,
     ) {}
 
     public function register(string $name, HealthCheckInterface $check): self

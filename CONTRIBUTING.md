@@ -51,4 +51,4 @@ vendor/bin/pint
 
 ## Questions?
 
-Open an issue or reach out at hello@synetro.dev.
+Open an issue or reach out at support@synetro.eu.

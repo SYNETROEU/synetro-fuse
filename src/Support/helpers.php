@@ -129,3 +129,24 @@ if (!function_exists('log_error')) {
         \Synetro\Fuse\Support\Facades\Fuse::log()->error($message, $context);
     }
 }
+
+if (!function_exists('validate')) {
+    function validate(mixed $data, array $rules): \Synetro\Fuse\Validation\Validator
+    {
+        return \Synetro\Fuse\Support\Facades\Fuse::validate($data, $rules);
+    }
+}
+
+if (!function_exists('lock')) {
+    function lock(string $name): \Synetro\Fuse\Locks\LockManager
+    {
+        return \Synetro\Fuse\Support\Facades\Fuse::lock($name);
+    }
+}
+
+if (!function_exists('limit')) {
+    function limit(string $name): \Synetro\Fuse\RateLimit\RateLimiter
+    {
+        return \Synetro\Fuse\Support\Facades\Fuse::limit($name);
+    }
+}

@@ -28,16 +28,16 @@ class GenerateCommand extends Command
 
     protected $description = 'Generate Fuse resources and components';
 
-    protected array $components = [];
+    protected array $selectedComponents = [];
 
     public function handle(ResourceManager $resources): int
     {
         $name = Str::studly($this->argument('name'));
 
         if ($this->option('full')) {
-            $this->components = ['model', 'migration', 'factory', 'controller', 'resource', 'policy', 'action', 'test'];
+            $this->selectedComponents = ['model', 'migration', 'factory', 'controller', 'resource', 'policy', 'action', 'test'];
         } else {
-            $this->components = array_filter([
+            $this->selectedComponents = array_filter([
                 'model' => $this->option('model'),
                 'migration' => $this->option('migration'),
                 'factory' => $this->option('factory'),
@@ -50,14 +50,14 @@ class GenerateCommand extends Command
             ]);
         }
 
-        if (empty($this->components)) {
+        if (empty($this->selectedComponents)) {
             $this->error('Please specify at least one component to generate.');
             return Command::FAILURE;
         }
 
         $this->info("Generating {$name}...");
 
-        foreach ($this->components as $component) {
+        foreach ($this->selectedComponents as $component) {
             $this->generateComponent($name, $component);
         }
 
