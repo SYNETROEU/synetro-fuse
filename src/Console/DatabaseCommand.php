@@ -46,12 +46,21 @@ class DatabaseCommand extends Command
 
     protected function showTables(string $connection): void
     {
-        $tables = DB::connection($connection)
-            ->select('SHOW TABLES');
+        $driver = DB::connection($connection)->getDriverName();
 
-        $this->info('Tables:');
-        foreach ($tables as $table) {
-            $this->line('  - '.array_values((array) $table)[0]);
+        if ($driver === 'sqlite') {
+            $tables = DB::connection($connection)
+                ->select("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'");
+            $this->info('Tables:');
+            foreach ($tables as $table) {
+                $this->line('  - '.$table->name);
+            }
+        } else {
+            $tables = DB::connection($connection)->select('SHOW TABLES');
+            $this->info('Tables:');
+            foreach ($tables as $table) {
+                $this->line('  - '.array_values((array) $table)[0]);
+            }
         }
     }
 

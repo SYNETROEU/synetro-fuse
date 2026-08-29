@@ -22,6 +22,7 @@ use Synetro\Fuse\Console\DoctorCommand;
 use Synetro\Fuse\Console\EventsCommand;
 use Synetro\Fuse\Console\FuseAuthCommand;
 use Synetro\Fuse\Console\GenerateCommand;
+use Synetro\Fuse\Console\HealthCommand;
 use Synetro\Fuse\Console\InspectCommand;
 use Synetro\Fuse\Console\InstallCommand;
 use Synetro\Fuse\Console\JobsCommand;
@@ -75,6 +76,7 @@ class FuseServiceProvider extends ServiceProvider
             $this->commands([
                 InstallCommand::class,
                 DoctorCommand::class,
+                HealthCommand::class,
                 OptimizeCommand::class,
                 AboutCommand::class,
                 GenerateCommand::class,

@@ -51,7 +51,12 @@ class CleanupCommand extends Command
     protected function cleanupSessions(): void
     {
         $this->info('Cleaning expired sessions...');
-        Artisan::call('session:prune');
+
+        try {
+            Artisan::call('session:prune');
+        } catch (\Throwable $e) {
+            $this->warn('Session pruning skipped: '.$e->getMessage());
+        }
     }
 
     protected function cleanupTokens(): void
@@ -83,6 +88,11 @@ class CleanupCommand extends Command
     protected function cleanupCache(): void
     {
         $this->info('Cleaning expired cache...');
-        Artisan::call('cache:prune-stale-tags');
+
+        try {
+            Artisan::call('cache:prune-stale-tags');
+        } catch (\Throwable $e) {
+            $this->warn('Cache pruning skipped: '.$e->getMessage());
+        }
     }
 }

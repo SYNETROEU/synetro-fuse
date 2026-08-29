@@ -72,6 +72,11 @@ class GenerateCommand extends Command
     {
         $stub = $this->resolveStub($component, $extensions);
         $path = $this->resolvePath($name, $component);
+        $dir = dirname($path);
+
+        if (! file_exists($dir)) {
+            mkdir($dir, 0755, true);
+        }
 
         if (file_exists($path) && ! $this->option('force')) {
             $this->warn("  ~ {$component} already exists: {$path}");
@@ -113,7 +118,7 @@ class GenerateCommand extends Command
             'resource' => app_path('Http/Resources/'.$name.'Resource.php'),
             'policy' => app_path('Policies/'.$name.'Policy.php'),
             'action' => app_path('Actions/'.$name.'Action.php'),
-            'test' => tests_path('Feature/'.$name.'Test.php'),
+            'test' => base_path('tests/Feature/'.$name.'Test.php'),
         ];
 
         return $paths[$component] ?? app_path($name.'.php');

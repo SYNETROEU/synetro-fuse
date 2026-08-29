@@ -34,7 +34,7 @@ class AboutCommand extends Command
             $this->info('');
             $this->info('Registered Resources:');
             foreach ($resourcesList as $resource) {
-                $this->line('  - '.$resource);
+                $this->line('  - '.($resource->uri() ?? 'unknown'));
             }
         }
 

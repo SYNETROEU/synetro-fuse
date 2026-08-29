@@ -25,7 +25,7 @@ class InstallCommand extends Command
         $this->line('Powerful Laravel applications. Without the boilerplate.');
         $this->newLine();
 
-        if ($this->option('no-config')) {
+        if (! $this->option('no-config')) {
             $this->publishConfig($config);
         }
 
@@ -68,18 +68,24 @@ class InstallCommand extends Command
             '2026_01_01_000003_create_fuse_features_table.php',
             '2026_01_01_000004_create_fuse_audits_table.php',
             '2026_01_01_000005_create_fuse_webhooks_table.php',
+            '2026_01_01_000006_create_fuse_files_table.php',
         ];
 
         $published = 0;
 
         foreach ($migrations as $migration) {
+            $source = __DIR__.'/../../database/migrations/'.$migration;
             $target = database_path('migrations/'.$migration);
 
             if (File::exists($target) && ! $this->option('force')) {
                 continue;
             }
 
-            $stub = file_get_contents(__DIR__.'/../../stubs/migrations/'.$migration);
+            if (! File::exists($source)) {
+                continue;
+            }
+
+            $stub = file_get_contents($source);
 
             File::put($target, $stub);
             $published++;

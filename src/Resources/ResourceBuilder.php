@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Resources;
 
-use Illuminate\Support\Str;
-
 class ResourceBuilder
 {
     protected array $options = [

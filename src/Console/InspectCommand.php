@@ -26,8 +26,16 @@ class InspectCommand extends Command
         $this->info("Inspecting: {$model}");
         $this->line('==================');
 
+        $resolved = class_exists($model) ? $model : ('App\\Models\\'.$model);
+
+        if (! class_exists($resolved)) {
+            $this->error('Model not found: Class "'.$resolved.'" not found');
+
+            return Command::FAILURE;
+        }
+
         try {
-            $instance = new $model;
+            $instance = new $resolved;
             $relations = get_class_methods($instance);
 
             $this->info('Relations:');

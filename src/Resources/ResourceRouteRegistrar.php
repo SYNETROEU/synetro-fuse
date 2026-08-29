@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Resources;
 
 use Illuminate\Routing\Router;
-use Illuminate\Support\Str;
 
 class ResourceRouteRegistrar
 {
@@ -28,7 +27,7 @@ class ResourceRouteRegistrar
 
         $this->router->middleware($middleware)
             ->prefix($uri)
-            ->as($uri . '.')
+            ->as($uri.'.')
             ->group(function ($router) use ($controller, $parameter) {
                 $router->get('/', [$controller, 'index'])
                     ->name('index');
@@ -36,16 +35,16 @@ class ResourceRouteRegistrar
                 $router->post('/', [$controller, 'store'])
                     ->name('store');
 
-                $router->get('/{' . $parameter . '}', [$controller, 'show'])
+                $router->get('/{'.$parameter.'}', [$controller, 'show'])
                     ->name('show');
 
-                $router->put('/{' . $parameter . '}', [$controller, 'update'])
+                $router->put('/{'.$parameter.'}', [$controller, 'update'])
                     ->name('update');
 
-                $router->patch('/{' . $parameter . '}', [$controller, 'update'])
-                    ->name('update');
+                $router->patch('/{'.$parameter.'}', [$controller, 'update'])
+                    ->name('update-patch');
 
-                $router->delete('/{' . $parameter . '}', [$controller, 'destroy'])
+                $router->delete('/{'.$parameter.'}', [$controller, 'destroy'])
                     ->name('destroy');
             });
     }

@@ -49,6 +49,11 @@ class FuseAuthCommand extends Command
 
         foreach ($controllers as $name => $stub) {
             $path = app_path("Http/Controllers/Auth/{$name}.php");
+            $dir = dirname($path);
+
+            if (! File::exists($dir)) {
+                File::makeDirectory($dir, 0755, true);
+            }
 
             if (File::exists($path) && ! $this->option('force')) {
                 $this->warn("Skipped {$name} (already exists)");
@@ -76,6 +81,11 @@ class FuseAuthCommand extends Command
     protected function scaffoldMiddleware(): void
     {
         $middlewarePath = app_path('Http/Middleware/EnsureEmailIsVerified.php');
+        $dir = dirname($middlewarePath);
+
+        if (! File::exists($dir)) {
+            File::makeDirectory($dir, 0755, true);
+        }
 
         if (! File::exists($middlewarePath) || $this->option('force')) {
             File::put($middlewarePath, $this->middlewareStub('EnsureEmailIsVerified'));

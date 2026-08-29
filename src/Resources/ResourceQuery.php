@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
 
 class ResourceQuery
 {
@@ -148,8 +147,9 @@ class ResourceQuery
             $this->include($params['include']);
         }
 
-        if (isset($params['fields']) && is_array($params['fields'])) {
-            $this->fields($params['fields']);
+        if (isset($params['fields'])) {
+            $fields = is_array($params['fields']) ? $params['fields'] : explode(',', (string) $params['fields']);
+            $this->fields($fields);
         }
 
         return $this;

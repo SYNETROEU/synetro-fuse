@@ -22,13 +22,17 @@ class RoutesCommand extends Command
 
         $rows = [];
         foreach ($fuseRoutes as $route) {
-            if (str_contains($route->getPrefix(), 'fuse')) {
-                $rows[] = [
-                    $route->getPrefix().$route->uri(),
-                    implode('|', $route->methods()),
-                    $route->getActionName(),
-                ];
+            $uri = (string) $route->uri();
+
+            if ($uri === '') {
+                continue;
             }
+
+            $rows[] = [
+                '/'.$uri,
+                implode('|', $route->methods()),
+                $route->getActionName(),
+            ];
         }
 
         $this->table(['URI', 'Method', 'Action'], $rows);

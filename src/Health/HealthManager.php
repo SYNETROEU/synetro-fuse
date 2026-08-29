@@ -21,7 +21,22 @@ class HealthManager
         protected Repository $cache,
         protected Queue $queue,
         protected FilesystemAdapter $files,
-    ) {}
+    ) {
+        $this->registerDefaultChecks();
+    }
+
+    protected function registerDefaultChecks(): void
+    {
+        $defaults = config('fuse.health.checks', []);
+
+        foreach ($defaults as $check) {
+            if (is_string($check) && class_exists($check)) {
+                $key = strtolower(class_basename($check));
+                $key = str_replace('check', '', $key);
+                $this->checks[$key] = app($check);
+            }
+        }
+    }
 
     public function register(string $name, HealthCheckInterface $check): self
     {

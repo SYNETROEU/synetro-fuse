@@ -89,9 +89,9 @@ class DoctorCommand extends Command
         $rows = collect($checks)->map(fn ($c) => [
             $c['name'],
             match ($c['status']) {
-                'pass' => $this->style('✓', 'green'),
-                'warn' => $this->style('⚠', 'yellow'),
-                default => $this->style('✗', 'red'),
+                'pass' => 'OK',
+                'warn' => 'WARN',
+                default => 'FAIL',
             },
             $c['message'],
         ])->toArray();

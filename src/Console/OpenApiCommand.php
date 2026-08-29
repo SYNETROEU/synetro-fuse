@@ -47,6 +47,12 @@ class OpenApiCommand extends Command
         $output = $this->option('yaml') ? $this->toYaml($spec) : json_encode($spec, JSON_PRETTY_PRINT);
 
         $filePath = $this->option('output');
+        $dir = dirname($filePath);
+
+        if (! is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
         file_put_contents($filePath, $output);
 
         $this->info("OpenAPI spec generated: {$filePath}");
