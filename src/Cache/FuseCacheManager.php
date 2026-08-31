@@ -6,6 +6,7 @@ namespace Synetro\Fuse\Cache;
 
 use Illuminate\Cache\CacheMiss;
 use Illuminate\Cache\Repository;
+use Illuminate\Support\Collection;
 
 class FuseCacheManager
 {
@@ -28,7 +29,7 @@ class FuseCacheManager
     {
         $seconds ??= config('fuse.cache.ttl', 3600);
 
-        return $this->cache->many($keys)->map(fn ($v) => $v instanceof CacheMiss ? null : $v);
+        return collect($this->cache->many($keys))->map(fn ($v) => $v instanceof CacheMiss ? null : $v);
     }
 
     public function forget(string $key): void
@@ -45,8 +46,6 @@ class FuseCacheManager
 
     public function tags(array $tags): self
     {
-        $this->cache = $this->cache->tags($tags);
-
-        return $this;
+        return new self($this->cache->tags($tags));
     }
 }
