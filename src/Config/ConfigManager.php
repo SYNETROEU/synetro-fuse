@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Config;
 
+use Illuminate\Support\Collection;
+
 use Illuminate\Cache\Repository;
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Database\Connection;

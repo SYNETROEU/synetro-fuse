@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Synetro\Fuse\Notifications;
 
+use Illuminate\Support\Collection;
+
 class NotificationManager
 {
     public function __construct() {}

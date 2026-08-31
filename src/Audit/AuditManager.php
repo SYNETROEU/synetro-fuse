@@ -6,6 +6,7 @@ namespace Synetro\Fuse\Audit;
 
 use Illuminate\Database\Connection;
 use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Collection;
 
 class AuditManager
 {

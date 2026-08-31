@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Synetro\Fuse\Metrics;
 
 use Illuminate\Cache\Repository;
+use Illuminate\Support\Collection;
 
 class MetricsManager
 {
