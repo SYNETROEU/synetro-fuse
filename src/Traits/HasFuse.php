@@ -22,11 +22,6 @@ trait HasFuse
         return $this->morphMany(Audit::class, 'actor');
     }
 
-    public function audits()
-    {
-        return $this->morphMany(Audit::class, 'actor');
-    }
-
     public function attachFile(string $name, mixed $file): AttachedFile
     {
         $path = $this->getTable().'/'.$this->getKey().'/'.$name;

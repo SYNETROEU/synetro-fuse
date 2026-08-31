@@ -6,7 +6,7 @@ namespace Synetro\Fuse\Notifications;
 
 use Illuminate\Notifications\Notification;
 
-class Notification extends Notification
+class DatabaseNotification extends Notification
 {
     public function __construct(
         protected string $message,

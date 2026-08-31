@@ -6,7 +6,7 @@ namespace Synetro\Fuse\Mail;
 
 use Illuminate\Mail\Mailable;
 
-class Mailable extends Mailable
+class TemplateMailable extends Mailable
 {
     public function __construct(
         protected string $template,

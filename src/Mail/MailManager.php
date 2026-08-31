@@ -14,16 +14,16 @@ class MailManager
 
     public function send(mixed $to, string $template, array $data = []): void
     {
-        $this->mailer->to($to)->send(new Mailable($template, $data));
+        $this->mailer->to($to)->send(new TemplateMailable($template, $data));
     }
 
     public function queue(mixed $to, string $template, array $data = []): void
     {
-        $this->mailer->to($to)->queue(new Mailable($template, $data));
+        $this->mailer->to($to)->queue(new TemplateMailable($template, $data));
     }
 
     public function later(mixed $to, \DateTimeInterface $delay, string $template, array $data = []): void
     {
-        $this->mailer->to($to)->later($delay, new Mailable($template, $data));
+        $this->mailer->to($to)->later($delay, new TemplateMailable($template, $data));
     }
 }

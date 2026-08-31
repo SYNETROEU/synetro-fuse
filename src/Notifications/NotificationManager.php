@@ -11,7 +11,7 @@ class NotificationManager
     public function send(mixed $notifiable, mixed $notification): Collection
     {
         if (is_string($notification)) {
-            return $notifiable->notify(new Notification($notification));
+            return $notifiable->notify(new DatabaseNotification($notification));
         }
 
         return $notifiable->notify($notification);
