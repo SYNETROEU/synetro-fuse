@@ -6,6 +6,7 @@ namespace Synetro\Fuse\Resources;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class ResourceService
 {
@@ -21,28 +22,34 @@ class ResourceService
 
     public function create(string $model, array $data): Model
     {
-        $instance = new $model;
+        return DB::transaction(function () use ($model, $data) {
+            $instance = new $model;
 
-        $instance->fill($data);
-        $instance->save();
+            $instance->fill($data);
+            $instance->save();
 
-        return $instance;
+            return $instance;
+        });
     }
 
     public function update(string $model, mixed $id, array $data): Model
     {
-        $instance = $this->find($model, $id);
+        return DB::transaction(function () use ($model, $id, $data) {
+            $instance = $this->find($model, $id);
 
-        $instance->fill($data);
-        $instance->save();
+            $instance->fill($data);
+            $instance->save();
 
-        return $instance;
+            return $instance;
+        });
     }
 
     public function delete(string $model, mixed $id): void
     {
-        $instance = $this->find($model, $id);
+        DB::transaction(function () use ($model, $id) {
+            $instance = $this->find($model, $id);
 
-        $instance->delete();
+            $instance->delete();
+        });
     }
 }

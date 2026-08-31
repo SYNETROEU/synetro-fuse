@@ -1,0 +1,13 @@
+﻿fix: add missing Collection type hint imports
+
+Multiple manager classes were using Collection as a return type without importing
+the Illuminate\Support\Collection class, which could cause issues in strict type
+checking environments and IDE analysis.
+
+Fixed in:
+- AuditManager (forModel method)
+- ConfigManager (all method)
+- MetricsManager (all method)
+- NotificationManager (send method)
+
+All 95 tests pass.

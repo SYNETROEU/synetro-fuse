@@ -50,9 +50,10 @@ class ConfigManager
 
     public function all(): Collection
     {
-        return ConfigModel::all()->mapWithKeys(fn ($item) => [
+        // Use lazy collection to prevent memory exhaustion with large datasets
+        return ConfigModel::query()->lazy()->mapWithKeys(fn ($item) => [
             $item->key => $this->unserialize($item->value),
-        ]);
+        ])->collect();
     }
 
     public function publish(): bool
@@ -63,10 +64,16 @@ class ConfigManager
             return false;
         }
 
-        $content = file_get_contents(__DIR__.'/../../config/fuse.php');
-        file_put_contents($target, $content);
+        try {
+            $content = file_get_contents(__DIR__.'/../../config/fuse.php');
+            if ($content === false) {
+                return false;
+            }
 
-        return true;
+            return file_put_contents($target, $content) !== false;
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     protected function resolve(string $key, mixed $default): mixed

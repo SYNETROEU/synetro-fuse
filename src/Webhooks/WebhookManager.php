@@ -40,9 +40,9 @@ class WebhookManager
         return new WebhookResponse($response);
     }
 
-    public function verify(string $payload, string $signature, string $secret): bool
+    public function verify(string $event, string $payload, string $signature, string $secret): bool
     {
-        $expected = hash_hmac('sha256', $payload, $secret);
+        $expected = hash_hmac('sha256', $event.$payload, $secret);
 
         return hash_equals($expected, $signature);
     }
